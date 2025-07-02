@@ -73,6 +73,9 @@ const HeroSection = () => {
 };
 
 
+useEffect(() => {
+  console.log("selectedMedia:", profileExists);
+}, [profileExists]);
 
  const addEventType = async () => {
   if (!newEventType.trim()) return;

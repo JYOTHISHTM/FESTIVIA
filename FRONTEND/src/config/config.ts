@@ -10,21 +10,21 @@ export const API_CONFIG = {
     LOGOUT: '/users/logout',
     CHANGE_PASSWORD: '/users/change-password',
     EVENT_TYPES: '/users/event-types',
-        WALLET_BOOKING: '/users/wallet-ticket-booking', // ✅ new
-    LAYOUT_BY_ID: '/users/layout', // ✅ new
- EVENT_PROFILE_INFO: '/users/event-profile-info', // ✅ new
-  ALL_CREATOR_POSTS: '/users/all-posts', 
-  BOOK_TICKET: '/users/events/book-ticket', // ✅ Add this
+    WALLET_BOOKING: '/users/wallet-ticket-booking',
+    LAYOUT_BY_ID: '/users/layout',
+    EVENT_PROFILE_INFO: '/users/event-profile-info',
+    ALL_CREATOR_POSTS: '/users/all-posts',
+    BOOK_TICKET: '/users/events/book-ticket',
 
 
- HOME_EVENTS: '/users/home-events',
-  EVENTS_BY_LOCATION: '/users/events-by-location',
-  SAVE_LOCATION: '/users/location',
-  CHAT_WITH_CREATORS: '/users/chat/user', // ✅ Add this
-  USER_TICKETS: (userId: string) => `/users/${userId}/tickets`, // ✅ Add this
-  POST_DETAILS_PAGE: "/users/post-details-page", // ✅ Add this
-  AVAILABLE_PRIVATE_CREATORS: '/users/available-private-event-creators', // ✅ Add this
-  CHAT_HISTORY: (roomId: string) => `/users/chat/${roomId}`, // ✅ Add this
+    HOME_EVENTS: '/users/home-events',
+    EVENTS_BY_LOCATION: '/users/events-by-location',
+    SAVE_LOCATION: '/users/location',
+    CHAT_WITH_CREATORS: '/users/chat/user',
+    USER_TICKETS: (userId: string) => `/users/${userId}/tickets`,
+    POST_DETAILS_PAGE: "/users/post-details-page",
+    AVAILABLE_PRIVATE_CREATORS: '/users/available-private-event-creators',
+    CHAT_HISTORY: (roomId: string) => `/users/chat/${roomId}`,
 
 
 
@@ -83,9 +83,9 @@ export const API_CONFIG = {
       ALL_LISTED_EVENTS: "/all-listed-events",
       CHAT_WITH_USERS: "/chat/creator",
       CREATOR_STATUS: "/creator-status",
-      POST_DETAILS: "/post-details", 
-       SUBSCRIPTION: "/subscription",
-    ALL_SUBSCRIPTIONS: "/all-subscriptions",
+      POST_DETAILS: "/post-details",
+      SUBSCRIPTION: "/subscription",
+      ALL_SUBSCRIPTIONS: "/all-subscriptions",
 
 
 

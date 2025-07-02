@@ -20,7 +20,10 @@ const addAuthToken = (config: any) => {
 };
 
 const logRequestDetails = (config: any) => {
+console.log(config);
+
 };
+
 
 const getLocalStorageItem = (key: string) => {
   return localStorage.getItem(key);

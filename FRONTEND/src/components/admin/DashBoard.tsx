@@ -26,9 +26,9 @@ const AdminDashboard = () => {
     totalEarnings: 0,
   });
 
-  const [subscriptionHistory, setSubscriptionHistory] = useState<SubscriptionHistory[]>([]);
+  // const [subscriptionHistory, setSubscriptionHistory] = useState<SubscriptionHistory[]>([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
-  const [activeTab, setActiveTab] = useState<'metrics' | 'distributions'>('metrics');
+  // const [activeTab, setActiveTab] = useState<'metrics' | 'distributions'>('metrics');
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -38,8 +38,8 @@ const AdminDashboard = () => {
           const active = response.history.filter(
             (sub: SubscriptionHistory) => sub.status.toLowerCase() === "active"
           );
-          const total = active.reduce((sum:number, sub:SubscriptionHistory) => sum + sub.price, 0);
-          setSubscriptionHistory(active);
+          const total = active.reduce((sum: number, sub: SubscriptionHistory) => sum + sub.price, 0);
+          // setSubscriptionHistory(active);
           setTotalRevenue(total);
         }
       } catch (error) {
@@ -129,9 +129,12 @@ const AdminDashboard = () => {
                 dataKey="value"
                 label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
               >
-                {distributionData.map((entry, index) => (
+
+                {distributionData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
+
+
               </Pie>
               <Tooltip />
               <Legend />

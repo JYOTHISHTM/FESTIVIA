@@ -35,7 +35,8 @@ function Booking() {
     const [event, setEvent] = useState<EventData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
+    // const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
+    const [selectedSeats] = useState<number[]>([]);
 
 
 
@@ -233,7 +234,7 @@ function Booking() {
         const renderGrid = (rows: number, cols: number, color: string) => (
             Array.from({ length: rows }).map((_, i) => (
                 <div key={`grid-row-${i}`} className="flex p-1 gap-2 justify-center">
-                    {Array.from({ length: cols }).map((_, j) => {
+                    {Array.from({ length: cols }).map((_) => {
                         if (counter > totalSeats) return null;
                         return seatBox(counter++, color);
                     })}

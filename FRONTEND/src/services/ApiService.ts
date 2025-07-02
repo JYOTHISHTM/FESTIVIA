@@ -19,6 +19,7 @@ const addAuthToken = (config: any) => {
 };
 
 const logRequestDetails = (config: any) => {
+console.log(config);
 
 };
 

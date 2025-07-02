@@ -49,6 +49,10 @@ const CreatorChatPage = () => {
     }
   };
 
+useEffect(() => {
+  console.log("selectedMedia:", setSelectedMedia);
+  console.log("mediaPreview:", mediaPreview);
+}, [selectedMedia, mediaPreview]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];

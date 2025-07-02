@@ -87,9 +87,9 @@ export default function SubscriptionHistory() {
     return now >= new Date(subscribedAt) && now <= new Date(endDate);
   };
 
-  const activeSubscriptions = history.filter(sub =>
-    isActive(sub.subscribedAt, sub.endDate)
-  );
+  // const activeSubscriptions = history.filter(sub =>
+  //   isActive(sub.subscribedAt, sub.endDate)
+  // );
 
   return (
     <div className="flex bg-gray-50 min-h-screen">

@@ -290,7 +290,7 @@ const handleBooking = async () => {
     const renderGrid = (rows: number, cols: number, color: string) => (
       Array.from({ length: rows }).map((_, i) => (
         <div key={`grid-row-${i}`} className="flex p-1 gap-2 justify-center">
-          {Array.from({ length: cols }).map((_, j) => {
+          {Array.from({ length: cols }).map((_) => {
             if (counter > totalSeats) return null;
             return seatBox(counter++, color);
           })}
@@ -376,8 +376,8 @@ const handleBooking = async () => {
         if (!layout.reclanarPrices) return 0;
 
         const seatsPerRowReclanar = 8;
-        const rows = Math.ceil(layout.totalSeats / seatsPerRowReclanar);
-        const lastTwoRows = rows - 2;
+        // const rows = Math.ceil(layout.totalSeats / seatsPerRowReclanar);
+        // const lastTwoRows = rows - 2;
         const reclanarPlusSeats = 2 * seatsPerRowReclanar;
 
         if (seatNumber > layout.totalSeats - reclanarPlusSeats) {

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import Sidebar from "../layout/creator/SideBar";
-import axios from "axios";
 import { creatorService } from "../../services/creator/creatorService";
 
 interface Buyer {
@@ -135,7 +134,7 @@ useEffect(() => {
         ) : (
           <>
             <div className="flex flex-wrap gap-4 mb-10">
-              {eventData.map((event, idx) => (
+              {eventData.map((event) => (
                 <button
                   key={event._id}
                   onClick={() => handleEventClick(event)}

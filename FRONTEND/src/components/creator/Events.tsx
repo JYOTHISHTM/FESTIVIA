@@ -53,6 +53,11 @@ const EventsPage: React.FC = () => {
     fetchEvents();
   }, [page]);
 
+  useEffect(() => {
+  console.log("selectedMedia:", totalPages);
+}, [totalPages ]);
+
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 

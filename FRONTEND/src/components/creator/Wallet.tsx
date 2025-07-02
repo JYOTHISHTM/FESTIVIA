@@ -140,6 +140,12 @@ const WalletComponent = () => {
     processPayment();
   }, [fetchWallet, isProcessingPayment]);
 
+
+  useEffect(() => {
+  console.log("selectedMedia:", message);
+}, [message ]);
+
+
   useEffect(() => {
     if (!creatorId) {
       navigate('/creator/login');

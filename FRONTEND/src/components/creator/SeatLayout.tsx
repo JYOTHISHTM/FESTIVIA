@@ -208,7 +208,7 @@ export default function SeatLayoutCreator() {
     const renderGrid = (rows: number, cols: number, color: string) => (
       Array.from({ length: rows }).map((_, i) => (
         <div key={`grid-row-${i}`} className="flex p-1 gap-2 justify-center">
-          {Array.from({ length: cols }).map((_, j) => {
+          {Array.from({ length: cols }).map((_) => {
             if (counter > totalSeats) return null;
             return seatBox(counter++, color);
           })}
