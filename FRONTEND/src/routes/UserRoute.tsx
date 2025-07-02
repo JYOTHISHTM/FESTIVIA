@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "../pages/user/LoginPage";
 import SignUp from "../pages/user/SignUpPage";
 import HomePage from "../pages/user/HomePage";
-import LandingPage from "../components/layout/user/LandingPage";
+// import LandingPage from "../components/layout/user/LandingPage";
 import Profile from "../pages/user/ProfilePage";
 import VerifyOtp from "../pages/user/verifyotp";
 import EventDetails from "../pages/user/EventDetails";
@@ -48,7 +48,7 @@ const UserRoutes = () => {
       <Route element={<UserProtectedRoute requireAuth={false} />}>
         <Route path="login" element={<Login />} />
         <Route path="sign-up" element={<SignUp />} />
-        <Route path="/" element={<LandingPage />} />
+        {/* <Route path="/" element={<LandingPage />} /> */}
       </Route>
 
       <Route element={<UserProtectedRoute />}>

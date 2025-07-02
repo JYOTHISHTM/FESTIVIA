@@ -5,7 +5,7 @@ import { Calendar, Users, MapPin, Mail, Phone, ChevronRight, Menu, X, PartyPoppe
 import { useNavigate } from 'react-router';
 
 function LandingPage() {
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredService, setHoveredService] = useState<number | null>(null);
   const [scrollY, setScrollY] = useState(0);
@@ -42,20 +42,24 @@ function LandingPage() {
             </div>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className=" md:flex items-center space-x-8">
               <NavLink href="#services">Services</NavLink>
               <NavLink href="#about">About</NavLink>
               <NavLink href="#contact">Contact</NavLink>
               <button
-      onClick={() => navigate("/user/login")}
-      className="px-6 py-2.5 text-green-600 hover:text-green-700 transition-colors relative group"
-    >
-      Login
-      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
-    </button>
-              <button       onClick={() => navigate("/user/sign-up")}
- className="px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-500 text-white rounded-full hover:shadow-lg hover:shadow-green-200 transform hover:-translate-y-0.5 transition-all">
+                onClick={() => navigate("/user/login")}
+                className="px-6 py-2.5 text-green-600 hover:text-green-700 transition-colors relative group"
+              >
+                Login
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
+              </button>
+              <button onClick={() => navigate("/user/sign-up")}
+                className="px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-500 text-white rounded-full hover:shadow-lg hover:shadow-green-200 transform hover:-translate-y-0.5 transition-all">
                 Create Account
+              </button>
+              <button onClick={() => navigate("/creator/login")}
+                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-full hover:shadow-lg hover:shadow-blue-200 transform hover:-translate-y-0.5 transition-all">
+                TO BE A CREATOR
               </button>
             </div>
 
@@ -80,6 +84,7 @@ function LandingPage() {
               <MobileNavLink href="#contact">Contact</MobileNavLink>
               <MobileNavLink href="#login">Login</MobileNavLink>
               <MobileNavLink href="#signup">Create Account</MobileNavLink>
+              <MobileNavLink href="#signup">TO BE A CREATOR</MobileNavLink>
             </div>
           </div>
         )}
