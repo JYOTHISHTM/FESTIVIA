@@ -1,9 +1,12 @@
 
 // const BASE_URL = 'http://localhost:5001';
 const BASE_URL='https://festivia-api.jothish.online'
+const MAINTENANCE_MODE = true; // 🔴 Site OFF | Set to false to turn it ON
+
 
 export const API_CONFIG = {
   BASE_URL,
+  MAINTENANCE_MODE,
 
   USER_ENDPOINTS: {
     EVENTS: '/users/public-events',
