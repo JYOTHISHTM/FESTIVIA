@@ -102,7 +102,7 @@ const MyTicketsPage = () => {
         return;
       }
 
-      await axios.post(`http://localhost:5001/users/${userId}/tickets/${ticketId}/cancel`);
+      await axios.post(`https://festivia-api.jothish.online/users/${userId}/tickets/${ticketId}/cancel`);
 
       await Swal.fire('Cancelled', 'Ticket cancelled successfully and refund processed.', 'success');
 

@@ -127,7 +127,7 @@ const EventDetails: React.FC = () => {
     useEffect(() => {
         const fetchEvent = async () => {
             try {
-                const response = await axios.get(`http://localhost:5001/users/event/${id}`);
+                const response = await axios.get(`https://festivia-api.jothish.online/users/event/${id}`);
                 const eventData = response.data;
                 setEvent(eventData);
 
@@ -137,7 +137,7 @@ const EventDetails: React.FC = () => {
 
                     try {
                         const profileRes = await axios.get(
-                            `http://localhost:5001/users/event-profile-info?creatorId=${eventData.creatorId}`
+                            `https://festivia-api.jothish.online/users/event-profile-info?creatorId=${eventData.creatorId}`
                         );
 
                         setCreatorProfile(profileRes.data);

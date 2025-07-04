@@ -74,7 +74,7 @@ const VerifyOtp: React.FC = () => {
     inputRefs.current[0]?.focus(); 
     startTimer();
     try {
-      await axios.post("http://localhost:5001/users/resend-otp", { email,type:"user" });
+      await axios.post("https://festivia-api.jothish.online/users/resend-otp", { email,type:"user" });
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to resend OTP");
     }

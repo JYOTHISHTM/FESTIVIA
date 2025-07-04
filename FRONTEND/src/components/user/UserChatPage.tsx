@@ -8,7 +8,7 @@ import HomeNavbar from '../layout/user/HomeNavbar';
 const storedUser = localStorage.getItem("user");
 const userId = storedUser ? JSON.parse(storedUser).id : null;
 
-const socket = io("http://localhost:5001");
+const socket = io("https://festivia-api.jothish.online");
 
 type Message = {
   _id?: string;

@@ -7,7 +7,7 @@ import Footer from '../layout/user/Footer';
 
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:5001');
+const socket = io('https://festivia-api.jothish.online');
 
 interface Chat {
   creatorName: string;
