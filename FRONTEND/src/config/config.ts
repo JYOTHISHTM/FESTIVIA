@@ -1,5 +1,6 @@
 
-const BASE_URL = 'http://localhost:5001';
+// const BASE_URL = 'http://localhost:5001';
+const BASE_URL='https://festivia-api.jothish.online'
 
 export const API_CONFIG = {
   BASE_URL,
@@ -26,7 +27,7 @@ export const API_CONFIG = {
     AVAILABLE_PRIVATE_CREATORS: '/users/available-private-event-creators',
     CHAT_HISTORY: (roomId: string) => `/users/chat/${roomId}`,
 
-
+ 
 
 
   },
