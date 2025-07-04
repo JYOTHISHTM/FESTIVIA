@@ -41,23 +41,41 @@ const SignUpForm: React.FC = () => {
       
     }),
   
-    onSubmit: async (values) => {
-      try {
-        console.log("Submitting:", values); // Debugging
-        const response = await axios.post(
-          "http://localhost:5001/users/register",
-          values
-        );
-        if (response.data.success) {
-          sessionStorage.setItem("email", values.email); 
-          navigate("/user/verify-otp"); 
-        }
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Something went wrong");
-        {error && <p style={{ color: "red" }}>{error}</p>}
+    // onSubmit: async (values) => {
+    //   try {
+    //     console.log("Submitting:", values); 
+    //     const response = await axios.post(
+    //       "http://localhost:5001/users/register",
+    //       values
+    //     );
+    //     if (response.data.success) {
+    //       sessionStorage.setItem("email", values.email); 
+    //       navigate("/user/verify-otp"); 
+    //     }
+    //   } catch (err: any) {
+    //     setError(err.response?.data?.message || "Something went wrong");
+    //     {error && <p style={{ color: "red" }}>{error}</p>}
 
-      }
-    },
+    //   }
+    // },
+    onSubmit: async (values) => {
+  try {
+    console.log("Submitting:", values);
+    const response = await axios.post(
+      "https://festivia-api.jothish.online/users/register",  // ✅ Live backend URL
+      values,
+      { withCredentials: true }  // ✅ Important if you're using cookies (sessions or auth)
+    );
+
+    if (response.data.success) {
+      sessionStorage.setItem("email", values.email);
+      navigate("/user/verify-otp");
+    }
+  } catch (err: any) {
+    setError(err.response?.data?.message || "Something went wrong");
+  }
+}
+
   });
   
 

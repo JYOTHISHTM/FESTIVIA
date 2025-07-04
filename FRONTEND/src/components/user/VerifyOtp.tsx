@@ -58,7 +58,7 @@ const VerifyOtp: React.FC = () => {
     const otpCode = otp.join("");
 
     try {
-      const response = await axios.post("http://localhost:5001/users/verify-otp", { email, otp: otpCode,userType: "user" });
+      const response = await axios.post("https://festivia-api.jothish.online/users/verify-otp", { email, otp: otpCode,userType: "user" });
       if (response.data.success) {
         sessionStorage.removeItem("email");
         navigate("/user/login");

@@ -60,7 +60,7 @@ const LoginPage: React.FC = () => {
 
     try {
 
-      const res = await api.post("http://localhost:5001/users/login",
+      const res = await api.post("https://festivia-api.jothish.online/users/login",
         { email, password, role: "user" },
         { withCredentials: true }
       );
