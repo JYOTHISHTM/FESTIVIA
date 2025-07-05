@@ -188,7 +188,7 @@ const CreateEvent: React.FC = () => {
       schema
         .required('Price is required')
         .min(0, 'Price cannot be negative')
-        .max(100, 'Price cannot be greater than 100'),
+        .max(10000, 'Price cannot be greater than 10000'),
     otherwise: (schema) => schema.notRequired(),
   }),
 
