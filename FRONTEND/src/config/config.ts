@@ -83,7 +83,7 @@ export const API_CONFIG = {
       UPDATE_DESCRIPTION: (id: string) => `/update-description/${id}`,
       TOGGLE_LISTING: (id: string) => `/toggle-list/${id}`,
       UPDATE_EVENT_PROFILE: '/update-event-profile',
-      UPDATE_EVENT_PROFILE_TYPE: "/creator/update-event-profile",
+      UPDATE_EVENT_PROFILE_TYPE: "/update-event-profileType",
       GET_EVENT_PROFILE_INFO: "/event-profile-info",
       ALL_LISTED_EVENTS: "/all-listed-events",
       CHAT_WITH_USERS: "/chat/creator",
