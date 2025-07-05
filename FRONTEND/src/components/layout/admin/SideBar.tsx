@@ -28,7 +28,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:5001/admin/logout", {
+      const response = await fetch("https://festivia-api.jothish.online/admin/logout", {
         method: "POST",
         credentials: "include",
       });

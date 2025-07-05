@@ -188,7 +188,7 @@ useEffect(() => {
       }
 
       try {
-        const res = await axios.get(`http://localhost:5001/creator/all-posts?creatorId=${creator.id}`);
+        const res = await axios.get(`https://festivia-api.jothish.online/creator/all-posts?creatorId=${creator.id}`);
         setEvents(res.data);
       } catch (err) {
         console.error("Error fetching events:", err);
@@ -219,7 +219,7 @@ useEffect(() => {
     try {
       setIsSaving(true);
 
-      const res = await axios.post("http://localhost:5001/creator/update-profile-image", formData, {
+      const res = await axios.post("https://festivia-api.jothish.online/creator/update-profile-image", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

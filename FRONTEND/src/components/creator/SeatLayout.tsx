@@ -74,7 +74,7 @@ export default function SeatLayoutCreator() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/creator/layouts/${creatorId}`, {
+      const response = await fetch(`https://festivia-api.jothish.online/creator/layouts/${creatorId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(layoutData),

@@ -91,7 +91,7 @@ useEffect(() => {
         price: Number(form.price),
         days: Number(form.days),
       };
-      await axios.post('http://localhost:5001/admin/create-subscription', payload);
+      await axios.post('https://festivia-api.jothish.online/admin/create-subscription', payload);
       Swal.fire({
         icon: 'success',
         title: 'Subscription Created!',
@@ -99,7 +99,7 @@ useEffect(() => {
       });
       setForm({ name: '', price: '', days: '' });
       setShowModal(false);
-      const res = await axios.get('http://localhost:5001/admin/all-subscriptions');
+      const res = await axios.get('https://festivia-api.jothish.online/admin/all-subscriptions');
       setPlans(res.data);
     } catch {
       Swal.fire({
@@ -128,7 +128,7 @@ useEffect(() => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5001/admin/delete-subscription/${planId}`);
+        await axios.delete(`https://festivia-api.jothish.online/admin/delete-subscription/${planId}`);
         setPlans((prevPlans) => prevPlans.filter((plan) => plan._id !== planId));
         Swal.fire('Deleted!', 'Subscription plan has been deleted.', 'success');
       } catch (err) {

@@ -12,7 +12,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:5001/users/logout", {
+      const response = await fetch("https://festivia-api.jothish.online/users/logout", {
         method: "GET",
         credentials: "include",
       });

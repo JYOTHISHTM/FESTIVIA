@@ -31,7 +31,7 @@ export default function SubscriptionHistory() {
     if (!token || !creator?.id) return;
 
     axios
-      .get(`http://localhost:5001/creator/subscription-history?creatorId=${creator.id}&all=true`, {
+      .get(`https://festivia-api.jothish.online/creator/subscription-history?creatorId=${creator.id}&all=true`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setFullHistory(res.data.history || []))
@@ -45,7 +45,7 @@ export default function SubscriptionHistory() {
     }
 
     axios
-      .get(`http://localhost:5001/creator/subscription-history?page=${page}&creatorId=${creator.id}`, {
+      .get(`https://festivia-api.jothish.online/creator/subscription-history?page=${page}&creatorId=${creator.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',

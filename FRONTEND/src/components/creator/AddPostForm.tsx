@@ -138,7 +138,7 @@ const EventForm = () => {
     }
     
     try {
-      await axios.post("http://localhost:5001/creator/create", formData, {
+      await axios.post("https://festivia-api.jothish.online/creator/create", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       

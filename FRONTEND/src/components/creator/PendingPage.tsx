@@ -66,7 +66,7 @@ const PendingPage = () => {
             <button
               onClick={async () => {
                 try {
-                  const res = await fetch(`http://localhost:5001/admin/creator-reapply/${creatorId}`, {
+                  const res = await fetch(`https://festivia-api.jothish.online/admin/creator-reapply/${creatorId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                   });

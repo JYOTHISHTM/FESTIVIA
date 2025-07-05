@@ -154,7 +154,7 @@ const LoginPage: React.FC = () => {
             <button
               type="button"
               onClick={() => {
-                window.location.href = 'http://localhost:5001/users/google';
+                window.location.href = 'https://festivia-api.jothish.online/users/google';
 
               }}
               className="w-2/7 flex ml-35 items-center justify-center gap-3 mt-4 bg-white border-2 border-gray-300 py-3 rounded-lg text-lg font-semibold cursor-pointer transition-all shadow-md hover:bg-gray-200"

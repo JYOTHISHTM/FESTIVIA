@@ -482,14 +482,14 @@ const handleBooking = async () => {
             Wallet
           </label>
 
-          <label className="flex items-center gap-2">
+          {/* <label className="flex items-center gap-2">
             <input
               type="checkbox"
               checked={paymentMethod === 'stripe'}
               onChange={() => setPaymentMethod(paymentMethod === 'stripe' ? null : 'stripe')}
             />
             Stripe
-          </label>
+          </label> */}
         </div>
 
         {/* Book button */}

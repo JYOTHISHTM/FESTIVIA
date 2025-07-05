@@ -40,7 +40,7 @@ const SidebarNavigation = () => {
   
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:5001/creator/logout", {
+      const response = await fetch("https://festivia-api.jothish.online/creator/logout", {
         method: "POST",
         credentials: "include",
       });

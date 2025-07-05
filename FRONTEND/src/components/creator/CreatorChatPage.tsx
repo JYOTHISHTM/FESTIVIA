@@ -7,7 +7,7 @@ import Sidebar from "../layout/creator/SideBar";
 
 const storedCreator = localStorage.getItem("creator");
 const creatorId = storedCreator ? JSON.parse(storedCreator).id : null;
-const socket = io("http://localhost:5001");
+const socket = io("https://festivia-api.jothish.online");
 
 type Message = {
   _id?: string;
@@ -185,7 +185,7 @@ useEffect(() => {
         const formData = new FormData();
         formData.append('file', selectedFile);
 
-        const res = await fetch('http://localhost:5001/creator/upload', {
+        const res = await fetch('https://festivia-api.jothish.online/creator/upload', {
           method: 'POST',
           body: formData,
         });

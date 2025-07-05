@@ -62,7 +62,7 @@ const LoginPage: React.FC = () => {
       console.log("🔄 Sending login request with:", { email, role: "creator" });
   
       const res = await api.post(
-        "http://localhost:5001/creator/login",
+        "https://festivia-api.jothish.online/creator/login",
         { email, password, role: "creator" },
         { withCredentials: true }
       );

@@ -280,7 +280,7 @@ const CreateEvent: React.FC = () => {
       for (let pair of form.entries()) {
         console.log(pair[0], pair[1]);
       }
-      const response = await api.post('http://localhost:5001/creator/create-event', form, {
+      const response = await api.post('https://festivia-api.jothish.online/creator/create-event', form, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

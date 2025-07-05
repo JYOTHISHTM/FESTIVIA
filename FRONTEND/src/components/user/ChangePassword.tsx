@@ -71,7 +71,7 @@ export default function ChangePassword() {
           },
         });
 
-        await fetch("http://localhost:5001/users/logout", {
+        await fetch("https://festivia-api.jothish.online/users/logout", {
           method: "GET",
           credentials: "include",
         });

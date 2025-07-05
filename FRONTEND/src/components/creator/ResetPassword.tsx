@@ -31,7 +31,7 @@ function ResetPassword() {
 
     onSubmit: async (values) => {
       try {
-        const response = await fetch("http://localhost:5001/creator/reset-password", {
+        const response = await fetch("https://festivia-api.jothish.online/creator/reset-password", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

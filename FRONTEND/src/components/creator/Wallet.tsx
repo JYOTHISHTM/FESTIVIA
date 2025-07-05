@@ -19,7 +19,7 @@ const WalletComponent = () => {
   const creatorData = localStorage.getItem('creator');
   const creatorId = creatorData ? JSON.parse(creatorData).id : null;
 
-  const API_BASE_URL = 'http://localhost:5001';
+  const API_BASE_URL = 'https://festivia-api.jothish.online';
   const WALLET_ENDPOINT = `${API_BASE_URL}/creator/wallet`;
 
   const fetchWallet = useCallback(async () => {

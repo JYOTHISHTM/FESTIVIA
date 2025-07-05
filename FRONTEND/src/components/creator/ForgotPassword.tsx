@@ -22,7 +22,7 @@ function ForgotOtp() {
 
   const onEmailSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      const response = await fetch("http://localhost:5001/creator/send-otp", {
+      const response = await fetch("https://festivia-api.jothish.online/creator/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function ForgotOtp() {
 
     if (enteredOtp.length === 4) {
       try {
-        const response = await fetch("http://localhost:5001/creator/verify-otp-forgot-password", {
+        const response = await fetch("https://festivia-api.jothish.online/creator/verify-otp-forgot-password", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

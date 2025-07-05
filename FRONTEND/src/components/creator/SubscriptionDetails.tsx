@@ -89,7 +89,7 @@ useEffect(() => {
     if (result.isConfirmed) {
       try {
         const { data } = await axios.post(
-          'http://localhost:5001/creator/buy-using-wallet',
+          'https://festivia-api.jothish.online/creator/buy-using-wallet',
           {
             creatorId: creator.id,
             planName
@@ -150,7 +150,7 @@ useEffect(() => {
 
                   if (result.isConfirmed) {
                     await axios.patch(
-                      `http://localhost:5001/creator/cancel-subscription/${creator.id}`,
+                      `https://festivia-api.jothish.online/creator/cancel-subscription/${creator.id}`,
                       {},
                       {
                         headers: { Authorization: `Bearer ${token}` }
