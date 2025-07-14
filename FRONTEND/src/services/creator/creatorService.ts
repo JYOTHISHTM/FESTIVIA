@@ -340,3 +340,140 @@ getTicketSummary: async (
     }
   },
 };
+
+export const createEvent = async (formData: FormData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.CREATE}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.response?.data?.message || 'Event creation failed',
+    };
+  }
+};
+
+export const createEventForm = async (form: FormData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.CREATE_EVENT}`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.response?.data?.message || 'Event creation failed',
+    };
+  }
+};
+
+export const uploadMedia = async (formData: FormData) => {
+  try {
+    const response = await fetch(
+      `${API_CONFIG.CREATOR.BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.UPLOAD_MEDIA}`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `Upload failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message || 'Upload failed',
+    };
+  }
+};
+
+export const getCreatorPosts = async (creatorId: string) => {
+  try {
+    const response = await fetch(`${API_CONFIG.CREATOR.BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.ALL_POSTS}?creatorId=${creatorId}`);
+    if (!response.ok) throw new Error('Failed to fetch creator posts');
+    return { success: true, data: await response.json() };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Error fetching posts' };
+  }
+};
+
+export const updateProfileImage = async (formData: FormData) => {
+  try {
+    const response = await fetch(`${API_CONFIG.CREATOR.BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.UPDATE_PROFILE_IMAGE}`, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    });
+
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.error || 'Image upload failed');
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Error uploading image' };
+  }
+};
+
+export const getCreatorSubscriptionHistory = async (creatorId: string, token: string) => {
+  try {
+    const response = await fetch(
+      `${API_CONFIG.CREATOR.BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.SUBSCRIPTION_HISTORY}?creatorId=${creatorId}&all=true`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.error || 'Failed to fetch subscription history');
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message || 'Unknown error',
+    };
+  }
+};
+
+export const getPaginatedSubscriptionHistory = async (creatorId: string, page: number, token: string) => {
+  try {
+    const url = `${API_CONFIG.CREATOR.BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.SUBSCRIPTION_HISTORY}?page=${page}&creatorId=${creatorId}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.error || 'Failed to fetch subscription history');
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message || 'Error fetching subscription history',
+    };
+  }
+};

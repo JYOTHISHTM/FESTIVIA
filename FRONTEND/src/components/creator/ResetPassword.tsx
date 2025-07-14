@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
 function ResetPassword() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,7 +32,7 @@ function ResetPassword() {
 
     onSubmit: async (values) => {
       try {
-        const response = await fetch("https://festivia-api.jothish.online/creator/reset-password", {
+        const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.RESEST_PASSWORD}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

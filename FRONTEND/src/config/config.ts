@@ -1,8 +1,8 @@
 
 // const BASE_URL = 'http://localhost:5001';
-const BASE_URL='https://festivia-api.jothish.online'
-const MAINTENANCE_MODE = true; 
-// const MAINTENANCE_MODE = false; 
+export const BASE_URL = 'https://festivia-api.jothish.online'
+// const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false; 
 
 
 export const API_CONFIG = {
@@ -31,7 +31,7 @@ export const API_CONFIG = {
     AVAILABLE_PRIVATE_CREATORS: '/users/available-private-event-creators',
     CHAT_HISTORY: (roomId: string) => `/users/chat/${roomId}`,
 
- 
+
 
 
   },
@@ -55,6 +55,9 @@ export const API_CONFIG = {
     DASHBOARD: '/admin/dashboard',
     SUBSCRIPTION_HISTORY: '/admin/subscriptions-history',
     ALL_SUBSCRIPTIONS: '/admin/all-subscriptions',
+    CREATE_SUBSCRIPTION: `/admin/create-subscription`,
+    DELETE_SUBSCRIPTION: (planId: string) => `/admin/delete-subscription/${planId}`,
+    CREATOR_REAPPLY: (creatorId: string) => `creator-reapply/${creatorId}`,
 
 
 
@@ -91,7 +94,20 @@ export const API_CONFIG = {
       POST_DETAILS: "/post-details",
       SUBSCRIPTION: "/subscription",
       ALL_SUBSCRIPTIONS: "/all-subscriptions",
-
+      CREATE: '/create',
+      CREATE_EVENT: '/create-event',
+      UPLOAD_MEDIA: '/upload',
+      ALL_POSTS: '/all-posts',
+      UPDATE_PROFILE_IMAGE: '/update-profile-image',
+      SEND_OTP: '/send-otp',
+      VERIFY_OTP_FORGOT_PASSWORD: '/verify-otp-forgot-password',
+      LOGIN: '/login',
+      RESEST_PASSWORD: '/reset-password',
+      LAYOUTS: (creatorId: string) => `layouts/${creatorId}`,
+      BUY_USING_WALLET: '/buy-using-wallet',
+      CANCEL_SUBSCRIPTION: (creatorId: string) => `/cancel-subscription/${creatorId}`,
+      SUBSCRIPTION_HISTORY: '/subscription-history',
+      WALLET_ENDPOINT: '/wallet',
 
 
 

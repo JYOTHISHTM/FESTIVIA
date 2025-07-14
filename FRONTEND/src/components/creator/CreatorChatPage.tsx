@@ -4,11 +4,13 @@ import io from "socket.io-client";
 import { creatorService } from "../../services/creator/creatorService";
 import { ArrowLeft, MessageCircle, Send, Download } from "lucide-react";
 import Sidebar from "../layout/creator/SideBar";
+import { uploadMedia } from '../../services/creator/creatorService';
 
 const storedCreator = localStorage.getItem("creator");
 const creatorId = storedCreator ? JSON.parse(storedCreator).id : null;
-const socket = io("https://festivia-api.jothish.online");
-
+import { BASE_URL } from '../../config/config';
+// const socket = io("https://festivia-api.jothish.online");
+const socket = io(BASE_URL);
 type Message = {
   _id?: string;
   sender: string;
@@ -49,10 +51,10 @@ const CreatorChatPage = () => {
     }
   };
 
-useEffect(() => {
-  console.log("selectedMedia:", setSelectedMedia);
-  console.log("mediaPreview:", mediaPreview);
-}, [selectedMedia, mediaPreview]);
+  useEffect(() => {
+    console.log("selectedMedia:", setSelectedMedia);
+    console.log("mediaPreview:", mediaPreview);
+  }, [selectedMedia, mediaPreview]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -76,28 +78,28 @@ useEffect(() => {
   };
 
   useEffect(() => {
-  if (!creatorId) return;
-  setLoading(true);
+    if (!creatorId) return;
+    setLoading(true);
 
-  creatorService.getChatHistory(roomId!)
-    .then((res) => {
-      const messagesWithDate = res.map((msg: Message) => ({
-        ...msg,
-        timestamp: msg.createdAt ? new Date(msg.createdAt) : undefined,
-      }));
+    creatorService.getChatHistory(roomId!)
+      .then((res) => {
+        const messagesWithDate = res.map((msg: Message) => ({
+          ...msg,
+          timestamp: msg.createdAt ? new Date(msg.createdAt) : undefined,
+        }));
 
-      const sortedMessages = messagesWithDate.sort(
-        (a: Message, b: Message) => (a.timestamp?.getTime() || 0) - (b.timestamp?.getTime() || 0)
-      );
-      setMessages(sortedMessages);
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error("Error fetching chat history:", err);
-      setError("Failed to load chat history");
-      setLoading(false);
-    });
-}, [creatorId, roomId]);
+        const sortedMessages = messagesWithDate.sort(
+          (a: Message, b: Message) => (a.timestamp?.getTime() || 0) - (b.timestamp?.getTime() || 0)
+        );
+        setMessages(sortedMessages);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching chat history:", err);
+        setError("Failed to load chat history");
+        setLoading(false);
+      });
+  }, [creatorId, roomId]);
 
 
   useEffect(() => {
@@ -174,6 +176,7 @@ useEffect(() => {
   }, [text]);
 
 
+
   const sendMessage = async () => {
     if ((!text.trim() && !selectedFile) || !userId || uploading) return;
 
@@ -181,40 +184,31 @@ useEffect(() => {
 
     try {
       if (selectedFile) {
-        console.log("Uploading file:", selectedFile.name);
         const formData = new FormData();
         formData.append('file', selectedFile);
 
-        const res = await fetch('https://festivia-api.jothish.online/creator/upload', {
-          method: 'POST',
-          body: formData,
-        });
+        const result = await uploadMedia(formData);
 
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.error || `Upload failed with status ${res.status}`);
-        }
+        if (!result.success) throw new Error(result.error);
 
-        const data = await res.json();
-        console.log("Upload successful:", data);
+        const { url, mediaType, mediaName, mediaSize } = result.data;
 
         const messageData = {
           roomId,
           message: text.trim() || '',
-          mediaUrl: data.url,
-          mediaType: data.mediaType || (selectedFile.type.startsWith('image/')
+          mediaUrl: url,
+          mediaType: mediaType || (selectedFile.type.startsWith('image/')
             ? 'image'
             : selectedFile.type.startsWith('video/')
               ? 'video'
               : 'file'),
-          mediaName: data.mediaName || selectedFile.name,
-          mediaSize: data.mediaSize || selectedFile.size,
+          mediaName: mediaName || selectedFile.name,
+          mediaSize: mediaSize || selectedFile.size,
           sender: 'creator',
           userId,
           creatorId,
         };
 
-        console.log("Sending media message:", messageData);
         socket.emit('send-message', messageData);
       } else {
         const messageData = {
@@ -225,23 +219,23 @@ useEffect(() => {
           creatorId,
         };
 
-        console.log("Sending text message:", messageData);
         socket.emit('send-message', messageData);
       }
 
-      // Clear inputs after successful send
       setText('');
       setSelectedFile(null);
       setPreviewUrl(null);
-      if (textareaRef.current) textareaRef.current.style.height = "auto";
+      if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Send message error:', error);
-      alert('Failed to send message: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      alert('Failed to send message: ' + error.message);
     } finally {
       setUploading(false);
     }
   };
+
+
   useEffect(() => {
     if (!selectedMedia) {
       setMediaPreview(null);

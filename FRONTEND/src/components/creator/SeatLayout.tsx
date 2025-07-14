@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
+
 
 type LayoutType = 'normal' | 'withbalcony' | 'reclanar' | 'centeredscreen';
 
@@ -22,8 +25,6 @@ export default function SeatLayoutCreator() {
 
   const navigate = useNavigate();
   const seatsPerRow = 8;
-  const creatorData = localStorage.getItem('creator');
-  const creatorId = creatorData ? JSON.parse(creatorData).id : null;
 
   const isPriceValid = (): boolean => {
     if (layoutType === 'normal' || layoutType === 'centeredscreen') {
@@ -74,7 +75,7 @@ export default function SeatLayoutCreator() {
     }
 
     try {
-      const response = await fetch(`https://festivia-api.jothish.online/creator/layouts/${creatorId}`, {
+      const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.LAYOUTS}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(layoutData),

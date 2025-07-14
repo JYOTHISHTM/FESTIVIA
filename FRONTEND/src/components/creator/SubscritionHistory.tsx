@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Sidebar from '../layout/creator/SideBar';
+import { getCreatorSubscriptionHistory,getPaginatedSubscriptionHistory } from '../../services/creator/creatorService';
 
 interface Subscription {
   name: string;
@@ -27,40 +27,43 @@ export default function SubscriptionHistory() {
   const token = localStorage.getItem('creatorToken');
   const creator = JSON.parse(localStorage.getItem('creator') || '{}');
 
-  useEffect(() => {
-    if (!token || !creator?.id) return;
+ useEffect(() => {
+  if (!token || !creator?.id) return;
 
-    axios
-      .get(`https://festivia-api.jothish.online/creator/subscription-history?creatorId=${creator.id}&all=true`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setFullHistory(res.data.history || []))
-      .catch((err) => console.error('Failed to fetch full history', err));
-  }, []);
+  const fetchHistory = async () => {
+    const result = await getCreatorSubscriptionHistory(creator.id, token);
+    if (result.success) {
+      setFullHistory(result.data.history || []);
+    } else {
+      console.error('Failed to fetch full history:', result.error);
+    }
+  };
 
-  useEffect(() => {
-    if (!token || !creator?.id) {
-      setIsLoading(false);
-      return;
+  fetchHistory();
+}, []);
+
+useEffect(() => {
+  if (!token || !creator?.id) {
+    setIsLoading(false);
+    return;
+  }
+
+  const fetchPaginatedHistory = async () => {
+    setIsLoading(true);
+    const result = await getPaginatedSubscriptionHistory(creator.id, page, token);
+
+    if (result.success) {
+      setHistory(result.data.history || []);
+      setTotalPages(result.data.totalPages || 1);
+    } else {
+      console.error('Error:', result.error);
     }
 
-    axios
-      .get(`https://festivia-api.jothish.online/creator/subscription-history?page=${page}&creatorId=${creator.id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((res) => {
-        setHistory(res.data.history || []);
-        setTotalPages(res.data.totalPages || 1);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error:', err);
-        setIsLoading(false);
-      });
-  }, [page]);
+    setIsLoading(false);
+  };
+
+  fetchPaginatedHistory();
+}, [page]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
@@ -86,10 +89,6 @@ export default function SubscriptionHistory() {
     const now = new Date();
     return now >= new Date(subscribedAt) && now <= new Date(endDate);
   };
-
-  // const activeSubscriptions = history.filter(sub =>
-  //   isActive(sub.subscribedAt, sub.endDate)
-  // );
 
   return (
     <div className="flex bg-gray-50 min-h-screen">

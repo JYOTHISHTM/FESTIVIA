@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { createSubscription, getAllSubscriptions, deleteSubscription } from '../../services/admin/adminService';
 import Sidebar from '../layout/admin/SideBar';
-import Swal from 'sweetalert2'; 
-import { getAllSubscriptions } from "../../services/admin/adminService"
+import Swal from 'sweetalert2';
 
 export default function AdminSubscription() {
   const [plans, setPlans] = useState<any[]>([]);
@@ -19,7 +18,7 @@ export default function AdminSubscription() {
 
 
 
-useEffect(() => {
+  useEffect(() => {
     const fetchPlans = async () => {
       try {
         const data = await getAllSubscriptions();
@@ -91,7 +90,7 @@ useEffect(() => {
         price: Number(form.price),
         days: Number(form.days),
       };
-      await axios.post('https://festivia-api.jothish.online/admin/create-subscription', payload);
+      await createSubscription(payload);
       Swal.fire({
         icon: 'success',
         title: 'Subscription Created!',
@@ -99,7 +98,7 @@ useEffect(() => {
       });
       setForm({ name: '', price: '', days: '' });
       setShowModal(false);
-      const res = await axios.get('https://festivia-api.jothish.online/admin/all-subscriptions');
+      const res = await getAllSubscriptions()
       setPlans(res.data);
     } catch {
       Swal.fire({
@@ -128,7 +127,7 @@ useEffect(() => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.delete(`https://festivia-api.jothish.online/admin/delete-subscription/${planId}`);
+        await deleteSubscription(planId)
         setPlans((prevPlans) => prevPlans.filter((plan) => plan._id !== planId));
         Swal.fire('Deleted!', 'Subscription plan has been deleted.', 'success');
       } catch (err) {

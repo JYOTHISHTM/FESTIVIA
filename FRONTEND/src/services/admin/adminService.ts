@@ -4,15 +4,7 @@ import { API_CONFIG } from "../../config/config";
 const { ADMIN_ENDPOINTS } = API_CONFIG;
 
 
-export const getAllSubscriptions = async () => {
-  try {
-    const response = await api.get(ADMIN_ENDPOINTS.ALL_SUBSCRIPTIONS);
-    return response.data;
-  } catch (error: any) {
-    console.error("Failed to fetch all subscriptions:", error);
-    throw new Error(error.response?.data?.message || "Fetch failed");
-  }
-}
+
 
 export const getDashboardData = async () => {
   try {
@@ -139,4 +131,41 @@ export const toggleBlockUser = async (userId: string) => {
     console.error("Error updating user status:", error);
     throw error;
   }
+
 };
+
+
+export const createSubscription = async (payload: {
+  name: string;
+  price: number;
+  days: number;
+}) => {
+  try {
+    const response = await api.post(ADMIN_ENDPOINTS.CREATE_SUBSCRIPTION, payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating subscription:', error);
+    throw error;
+  }
+};
+
+
+export const deleteSubscription = async (planId: string) => {
+  try {
+    const response = await api.delete(ADMIN_ENDPOINTS.DELETE_SUBSCRIPTION(planId));
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting subscription:', error);
+    throw error;
+  }
+};
+
+export const getAllSubscriptions = async () => {
+  try {
+    const response = await api.get(ADMIN_ENDPOINTS.ALL_SUBSCRIPTIONS);
+    return response.data;
+  } catch (error: any) {
+    console.error("Failed to fetch all subscriptions:", error);
+    throw new Error(error.response?.data?.message || "Fetch failed");
+  }
+}

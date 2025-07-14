@@ -1,7 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
 interface FormValues {
   email: string;
 }
@@ -22,12 +23,12 @@ function ForgotOtp() {
 
   const onEmailSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      const response = await fetch("https://festivia-api.jothish.online/creator/send-otp", {
+      const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.SEND_OTP}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: data.email,type:"creator" }),
+        body: JSON.stringify({ email: data.email, type: "creator" }),
       });
 
       const resData = await response.json();
@@ -43,11 +44,11 @@ function ForgotOtp() {
       console.error("❌ Error sending OTP:", error);
       alert("Something went wrong");
     }
-  };  
+  };
 
 
   const handleOtpChange = (value: string, index: number) => {
-    if (!/^\d*$/.test(value)) return; 
+    if (!/^\d*$/.test(value)) return;
 
     const newOtp = [...otp];
     newOtp[index] = value;
@@ -63,7 +64,7 @@ function ForgotOtp() {
 
     if (enteredOtp.length === 4) {
       try {
-        const response = await fetch("https://festivia-api.jothish.online/creator/verify-otp-forgot-password", {
+        const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.VERIFY_OTP_FORGOT_PASSWORD}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -77,14 +78,12 @@ function ForgotOtp() {
 
         const data = await response.json();
         if (response.ok) {
-          console.log("✅ OTP sent to:", emailValue);
-          console.log("🔐 OTP for testing:", data.otp);
+
         } else {
           alert(data.message || "Failed to send OTP");
         }
 
         if (response.ok) {
-          console.log("✅ OTP verified successfully");
           navigate("/creator/reset-password", { state: { email: emailValue } });
         } else {
           alert(data.message || "❌ Invalid OTP");
@@ -121,8 +120,8 @@ function ForgotOtp() {
               readOnly={emailSubmitted}
               onChange={(e) => setEmailValue(e.target.value)}
               className={`w-full p-3 border rounded-lg focus:outline-none ${emailSubmitted
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "border-green-500-300 focus:ring-2 focus:ring-green-500"
+                ? "bg-gray-500 cursor-not-allowed"
+                : "border-green-500-300 focus:ring-2 focus:ring-green-500"
                 }`}
             />
             {errors.email && !emailSubmitted && (
@@ -176,7 +175,7 @@ function ForgotOtp() {
             >
               Verify OTP
             </button>
-         
+
           </div>
         )}
       </div>

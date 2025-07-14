@@ -29,9 +29,7 @@ const EventApproval = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const response = await getEvents();
-      console.log(response, "responze from here.......");
-
+      const response = await getEvents()
       if (response.success) {
         setEvents(response.data);
       } else {

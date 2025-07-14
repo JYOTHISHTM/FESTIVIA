@@ -3,7 +3,8 @@ import SidebarNavigation from '../layout/creator/SideBar';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { creatorService } from '../../services/creator/creatorService'
-
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
 
 
 export default function SubscriptionDetails() {
@@ -30,41 +31,41 @@ export default function SubscriptionDetails() {
   }, []);
 
 
-useEffect(() => {
-  if (creator?.id && token) {
-    const fetchSubscription = async () => {
-      try {
-        const data = await creatorService.getCurrentSubscription(token);
-        if (data) {
-          setPlan(data);
-          setHasActivePlan(true);
-        } else {
+  useEffect(() => {
+    if (creator?.id && token) {
+      const fetchSubscription = async () => {
+        try {
+          const data = await creatorService.getCurrentSubscription(token);
+          if (data) {
+            setPlan(data);
+            setHasActivePlan(true);
+          } else {
+            setHasActivePlan(false);
+          }
+        } catch (err) {
+          console.error("Error fetching subscription", err);
           setHasActivePlan(false);
+        } finally {
+          setLoading(false);
         }
+      };
+
+      fetchSubscription();
+    }
+  }, [creator?.id, token]);
+
+  useEffect(() => {
+    const fetchAllPlans = async () => {
+      try {
+        const plans = await creatorService.getAllSubscriptions();
+        setAllPlans(plans);
       } catch (err) {
-        console.error("Error fetching subscription", err);
-        setHasActivePlan(false);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching all plans", err);
       }
     };
 
-    fetchSubscription();
-  }
-}, [creator?.id, token]);
-
-useEffect(() => {
-  const fetchAllPlans = async () => {
-    try {
-      const plans = await creatorService.getAllSubscriptions();
-      setAllPlans(plans);
-    } catch (err) {
-      console.error("Error fetching all plans", err);
-    }
-  };
-
-  fetchAllPlans();
-}, []);
+    fetchAllPlans();
+  }, []);
 
 
 
@@ -89,7 +90,7 @@ useEffect(() => {
     if (result.isConfirmed) {
       try {
         const { data } = await axios.post(
-          'https://festivia-api.jothish.online/creator/buy-using-wallet',
+          `${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.BUY_USING_WALLET}`,
           {
             creatorId: creator.id,
             planName
@@ -150,7 +151,7 @@ useEffect(() => {
 
                   if (result.isConfirmed) {
                     await axios.patch(
-                      `https://festivia-api.jothish.online/creator/cancel-subscription/${creator.id}`,
+                      `${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.CANCEL_SUBSCRIPTION}`,
                       {},
                       {
                         headers: { Authorization: `Bearer ${token}` }

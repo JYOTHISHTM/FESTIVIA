@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import SidebarNavigation from "../layout/creator/SideBar";
 import { useNavigate } from "react-router";
 import { creatorService } from "../../services/creator/creatorService"
+import { getCreatorPosts, updateProfileImage } from "../../services/creator/creatorService";
 
 
 interface Event {
@@ -44,9 +44,42 @@ const HeroSection = () => {
   };
 
   const handleSave = async () => {
-  if (!editingField) return;
+    if (!editingField) return;
 
-  try {
+    try {
+      const creatorString = localStorage.getItem("creator");
+      const creator = creatorString ? JSON.parse(creatorString) : null;
+
+      if (!creator?.id) {
+        console.error("Creator ID not available");
+        return;
+      }
+
+      await creatorService.updateEventProfileField(
+        creator.id,
+        editingField,
+        tempValue
+      );
+
+      if (editingField === "profileName") setProfileName(tempValue);
+      if (editingField === "profileBio") setProfileBio(tempValue);
+      if (editingField === "eventCount") setEventCount(tempValue);
+      if (editingField === "profileImage") setProfileImage(tempValue);
+
+      setEditingField(null);
+    } catch (error) {
+      console.error("Failed to update:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    console.log("selectedMedia:", profileExists);
+  }, [profileExists]);
+
+  const addEventType = async () => {
+    if (!newEventType.trim()) return;
+
     const creatorString = localStorage.getItem("creator");
     const creator = creatorString ? JSON.parse(creatorString) : null;
 
@@ -55,111 +88,78 @@ const HeroSection = () => {
       return;
     }
 
-    await creatorService.updateEventProfileField(
-      creator.id,
-      editingField,
-      tempValue
-    );
+    try {
+      const updatedTypes = [...eventTypes, newEventType];
 
-    if (editingField === "profileName") setProfileName(tempValue);
-    if (editingField === "profileBio") setProfileBio(tempValue);
-    if (editingField === "eventCount") setEventCount(tempValue);
-    if (editingField === "profileImage") setProfileImage(tempValue);
+      await creatorService.updateEventProfileType(
+        creator.id,
+        "eventTypes",
+        updatedTypes
+      );
 
-    setEditingField(null);
-  } catch (error) {
-    console.error("Failed to update:", error);
-  }
-};
-
-
-useEffect(() => {
-  console.log("selectedMedia:", profileExists);
-}, [profileExists]);
-
- const addEventType = async () => {
-  if (!newEventType.trim()) return;
-
-  const creatorString = localStorage.getItem("creator");
-  const creator = creatorString ? JSON.parse(creatorString) : null;
-
-  if (!creator?.id) {
-    console.error("Creator ID not available");
-    return;
-  }
-
-  try {
-    const updatedTypes = [...eventTypes, newEventType];
-
-    await creatorService.updateEventProfileType(
-      creator.id,
-      "eventTypes",
-      updatedTypes
-    );
-
-    setEventTypes(updatedTypes);
-    setNewEventType("");
-  } catch (error) {
-    console.error("Failed to add event type:", error);
-  }
-};
+      setEventTypes(updatedTypes);
+      setNewEventType("");
+    } catch (error) {
+      console.error("Failed to add event type:", error);
+    }
+  };
 
 
- const removeEventType = async (index: number) => {
-  const creatorString = localStorage.getItem("creator");
-  const creator = creatorString ? JSON.parse(creatorString) : null;
+  const removeEventType = async (index: number) => {
+    const creatorString = localStorage.getItem("creator");
+    const creator = creatorString ? JSON.parse(creatorString) : null;
 
-  if (!creator?.id) {
-    console.error("Creator ID not available");
-    return;
-  }
+    if (!creator?.id) {
+      console.error("Creator ID not available");
+      return;
+    }
 
-  try {
-    const updatedTypes = [...eventTypes];
-    updatedTypes.splice(index, 1);
+    try {
+      const updatedTypes = [...eventTypes];
+      updatedTypes.splice(index, 1);
 
-    await creatorService.updateEventProfile(creator.id, "eventTypes", updatedTypes);
-    setEventTypes(updatedTypes);
-  } catch (error) {
-    console.error("Failed to remove event type:", error);
-  }
-};
+      await creatorService.updateEventProfile(creator.id, "eventTypes", updatedTypes);
+      setEventTypes(updatedTypes);
+    } catch (error) {
+      console.error("Failed to remove event type:", error);
+    }
+  };
 
 
 
 
   const fetchProfile = async () => {
-  try {
-    const creatorString = localStorage.getItem("creator");
-    const creator = creatorString ? JSON.parse(creatorString) : null;
-    const creatorId = creator?.id;
+    try {
+      const creatorString = localStorage.getItem("creator");
+      const creator = creatorString ? JSON.parse(creatorString) : null;
+      const creatorId = creator?.id;
 
-    if (!creatorId) {
-      console.error("Creator ID is not available");
+      if (!creatorId) {
+        console.error("Creator ID is not available");
+        setProfileExists(false);
+        return;
+      }
+
+      const data = await creatorService.getEventProfileInfo(creatorId);
+
+      if (!data || Object.keys(data).length === 0) {
+        setProfileExists(false);
+        return;
+      }
+
+      const { profileName, profileImage, profileBio, eventCount, eventTypes = [] } = data;
+
+      setProfileExists(true);
+      setProfileName(profileName || "");
+      setProfileBio(profileBio || "");
+      setEventCount(eventCount || 0);
+      setEventTypes(eventTypes || []);
+      setProfileImage(profileImage || "/default-profile.png");
+    } catch (error) {
+      console.error("Error fetching profile:", error);
       setProfileExists(false);
-      return;
     }
-
-    const data = await creatorService.getEventProfileInfo(creatorId);
-
-    if (!data || Object.keys(data).length === 0) {
-      setProfileExists(false);
-      return;
-    }
-
-    const { profileName, profileImage, profileBio, eventCount, eventTypes = [] } = data;
-
-    setProfileExists(true);
-    setProfileName(profileName || "");
-    setProfileBio(profileBio || "");
-    setEventCount(eventCount || 0);
-    setEventTypes(eventTypes || []);
-    setProfileImage(profileImage || "/default-profile.png");
-  } catch (error) {
-    console.error("Error fetching profile:", error);
-    setProfileExists(false);
-  }
-};
+  };
 
 
 
@@ -188,8 +188,8 @@ useEffect(() => {
       }
 
       try {
-        const res = await axios.get(`https://festivia-api.jothish.online/creator/all-posts?creatorId=${creator.id}`);
-        setEvents(res.data);
+        const result = await getCreatorPosts(creator.id);
+        setEvents(result.data);
       } catch (err) {
         console.error("Error fetching events:", err);
       }
@@ -219,9 +219,7 @@ useEffect(() => {
     try {
       setIsSaving(true);
 
-      const res = await axios.post("https://festivia-api.jothish.online/creator/update-profile-image", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await updateProfileImage(formData);
 
       setProfileImage(res.data.profileImage);
       setNewImageFile(null);

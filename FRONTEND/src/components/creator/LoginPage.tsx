@@ -5,6 +5,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import api from '../../services/creator/ApiService';
 import { login } from "../../redux/slice/creatorAuthSlice";
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
 
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -59,10 +61,9 @@ const LoginPage: React.FC = () => {
   
     setIsLoading(true);
     try {
-      console.log("🔄 Sending login request with:", { email, role: "creator" });
   
       const res = await api.post(
-        "https://festivia-api.jothish.online/creator/login",
+       `${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.LOGIN}`,
         { email, password, role: "creator" },
         { withCredentials: true }
       );

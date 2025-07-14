@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { creatorService } from "../../services/creator/creatorService";
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
 
 const PendingPage = () => {
   const { creatorId } = useParams<{ creatorId: string }>();
@@ -66,7 +68,7 @@ const PendingPage = () => {
             <button
               onClick={async () => {
                 try {
-                  const res = await fetch(`https://festivia-api.jothish.online/admin/creator-reapply/${creatorId}`, {
+                  const res = await fetch(`${BASE_URL}/${API_CONFIG.ADMIN_ENDPOINTS.CREATOR_REAPPLY}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                   });

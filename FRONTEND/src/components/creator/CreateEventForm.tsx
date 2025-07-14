@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import SideBar from '../layout/creator/SideBar';
-import api from '../../services/creator/ApiService';
+import { createEventForm } from '../../services/creator/creatorService';
 import LocationAutocomplete from './LocationAutocomplete';
 import { creatorService } from '../../services/creator/creatorService';
 
@@ -280,9 +280,16 @@ const CreateEvent: React.FC = () => {
       for (let pair of form.entries()) {
         console.log(pair[0], pair[1]);
       }
-      const response = await api.post('https://festivia-api.jothish.online/creator/create-event', form, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+
+      // const response = await api.post('https://festivia-api.jothish.online/creator/create-event', form, {
+      //   headers: { 'Content-Type': 'multipart/form-data' },
+      // });
+
+        const response = await createEventForm(form);
+      
+            if (!response.success) {
+              throw new Error(response.error);
+            }
 
       if (response.data && response.data._id) {
         navigate(`/creator/event/${response.data._id}`);

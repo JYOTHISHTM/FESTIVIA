@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router";
 import SidebarNavigation from "../layout/creator/SideBar";
+import { createEvent } from '../../services/creator/creatorService';
 
 interface FormState {
   eventName: string;
@@ -122,7 +122,7 @@ const EventForm = () => {
 
     const payload = {
       ...form,
-      eventName: form.eventName || form.eventType, // fallback logic
+      eventName: form.eventName || form.eventType,
     };
 
     Object.entries(payload).forEach(([key, value]) => formData.append(key, value));
@@ -136,18 +136,19 @@ const EventForm = () => {
     if (creator?.id) {
       formData.append("creator", creator.id);
     }
-    
+
     try {
-      await axios.post("https://festivia-api.jothish.online/creator/create", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      
+      const result = await createEvent(formData);
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
       setToast({
         message: "Event created successfully!",
         type: "success",
         show: true,
       });
-      
+
       setForm({
         eventName: "",
         date: "",
@@ -157,10 +158,10 @@ const EventForm = () => {
         totalTicketsSold: "",
         totalRevenue: "",
       });
-      
+
       setMainImage(null);
       setAdditionalImages([]);
-      
+
       setTimeout(() => {
         navigate("/creator/event-profile");
       }, 1500);
@@ -175,13 +176,16 @@ const EventForm = () => {
     }
   };
 
+
+
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <SidebarNavigation />
-      
+
       {/* Toast message */}
       {toast.show && (
-        <div 
+        <div
           className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-y-0 opacity-100
             ${toast.type === "success" ? "bg-green-500" : "bg-red-500"} text-white`}
         >
@@ -202,16 +206,16 @@ const EventForm = () => {
 
       <div className="flex-1 p-6 flex justify-center">
         {isSubmitting && (
-         <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-md flex items-center justify-center">
-         <div className="w-80 h-60 bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center justify-center">
-           {/* Spinner */}
-           <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-           
-           {/* Loading Text */}
-           <p className="mt-6 text-lg font-medium text-gray-800">Creating your event...</p>
-         </div>
-       </div>
-       
+          <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-md flex items-center justify-center">
+            <div className="w-80 h-60 bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center justify-center">
+              {/* Spinner */}
+              <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+
+              {/* Loading Text */}
+              <p className="mt-6 text-lg font-medium text-gray-800">Creating your event...</p>
+            </div>
+          </div>
+
         )}
 
         <form
@@ -220,7 +224,7 @@ const EventForm = () => {
           className="w-full max-w-4xl p-8 shadow-lg rounded-xl bg-white mt-6"
         >
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Create New Event</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Event Type */}
             <div>

@@ -26,9 +26,7 @@ const AdminDashboard = () => {
     totalEarnings: 0,
   });
 
-  // const [subscriptionHistory, setSubscriptionHistory] = useState<SubscriptionHistory[]>([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
-  // const [activeTab, setActiveTab] = useState<'metrics' | 'distributions'>('metrics');
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -39,7 +37,6 @@ const AdminDashboard = () => {
             (sub: SubscriptionHistory) => sub.status.toLowerCase() === "active"
           );
           const total = active.reduce((sum: number, sub: SubscriptionHistory) => sum + sub.price, 0);
-          // setSubscriptionHistory(active);
           setTotalRevenue(total);
         }
       } catch (error) {
@@ -76,7 +73,6 @@ const AdminDashboard = () => {
 
 
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {[
           { title: "Total Users", value: data.userCount, color: "text-blue-600", bg: "bg-blue-100" },
@@ -90,9 +86,7 @@ const AdminDashboard = () => {
           </div>
         ))}
       </div>
-      {/* Charts */}
       <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Metrics Overview Chart */}
         <div className="bg-white shadow rounded-xl p-6">
           <h2 className="text-xl font-semibold text-gray-700 mb-6">Metrics Overview</h2>
           <ResponsiveContainer width="100%" height={300}>
@@ -114,7 +108,6 @@ const AdminDashboard = () => {
 
         </div>
 
-        {/* User Distribution Pie Chart */}
         <div className="bg-white shadow rounded-xl p-6">
           <h2 className="text-xl font-semibold text-gray-700 mb-6">User Distribution</h2>
           <ResponsiveContainer width="100%" height={300}>
