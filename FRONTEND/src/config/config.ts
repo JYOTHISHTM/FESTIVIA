@@ -101,7 +101,7 @@ export const API_CONFIG = {
       UPDATE_PROFILE_IMAGE: '/update-profile-image',
       SEND_OTP: '/send-otp',
       VERIFY_OTP_FORGOT_PASSWORD: '/verify-otp-forgot-password',
-      LOGIN: 'login',
+      LOGIN: 'creator/login',
       RESEST_PASSWORD: '/reset-password',
       LAYOUTS: (creatorId: string) => `layouts/${creatorId}`,
       BUY_USING_WALLET: '/buy-using-wallet',
