@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import Sidebar from '../layout/creator/SideBar';
-
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
 
 
 const WalletComponent = () => {
@@ -19,8 +20,7 @@ const WalletComponent = () => {
   const creatorData = localStorage.getItem('creator');
   const creatorId = creatorData ? JSON.parse(creatorData).id : null;
 
-  const API_BASE_URL = 'https://festivia-api.jothish.online';
-  const WALLET_ENDPOINT = `${API_BASE_URL}/creator/wallet`;
+ 
 
   const fetchWallet = useCallback(async () => {
     if (!creatorId) {
@@ -30,7 +30,7 @@ const WalletComponent = () => {
 
     setIsLoading(true);
     try {
-      const res = await fetch(`${WALLET_ENDPOINT}/${creatorId}`);
+      const res = await fetch(`${API_CONFIG.CREATOR.ENDPOINTS.WALLET_ENDPOINT}/${creatorId}`);
       const data = await res.json();
       if (res.ok) {
         const walletData = data.data;
@@ -50,12 +50,12 @@ const WalletComponent = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [creatorId, WALLET_ENDPOINT]);
+  }, [creatorId, API_CONFIG.CREATOR.ENDPOINTS.WALLET_ENDPOINT]);
 
   const updateWallet = async (creatorId: string, amount: number) => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}/creator/wallet/add`, {
+      const res = await fetch(`${BASE_URL}/creator/wallet/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ creatorId, amount }),
@@ -76,7 +76,7 @@ const WalletComponent = () => {
   const createStripeSession = async (creatorId: string, amount: number) => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}/creator/wallet/checkout-session`, {
+      const res = await fetch(`${BASE_URL}/creator/wallet/checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ creatorId, amount }),
