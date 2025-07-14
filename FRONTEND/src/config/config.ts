@@ -107,7 +107,7 @@ export const API_CONFIG = {
       BUY_USING_WALLET: '/buy-using-wallet',
       CANCEL_SUBSCRIPTION: (creatorId: string) => `/cancel-subscription/${creatorId}`,
       SUBSCRIPTION_HISTORY: '/subscription-history',
-      WALLET_ENDPOINT: 'creator/wallet',
+      WALLET_ENDPOINT: '/wallet',
 
 
 
