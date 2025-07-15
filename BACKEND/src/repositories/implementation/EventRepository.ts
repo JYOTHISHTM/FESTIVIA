@@ -14,7 +14,7 @@ class EventRepository implements IEventRepository {
           type: 'Point',
           coordinates: [longitude, latitude],
         },
-        $maxDistance: 10000 
+        $maxDistance: 10000
       }
     }
   });

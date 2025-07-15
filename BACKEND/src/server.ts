@@ -50,7 +50,7 @@ app.use("/webhook", webhookRouter);
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT ;
 const httpServer = new HttpServer(app);
 const io = new SocketIOServer(httpServer, {
   cors: {
