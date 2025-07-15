@@ -40,6 +40,7 @@ const CreateEvent: React.FC = () => {
   const [layoutId, setLayoutId] = useState<string | null>(null);
   const creator = JSON.parse(localStorage.getItem("creator") || '{}');
   const creatorId = creator.id || null;
+  const token = localStorage.getItem("creatorToken"); 
 
   useEffect(() => {
     const creator = JSON.parse(localStorage.getItem("creator") || '{}');
@@ -285,7 +286,7 @@ const CreateEvent: React.FC = () => {
       //   headers: { 'Content-Type': 'multipart/form-data' },
       // });
 
-        const response = await createEventForm(form);
+        const response = await createEventForm(form,token);
       
             if (!response.success) {
               throw new Error(response.error);

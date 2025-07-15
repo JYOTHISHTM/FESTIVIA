@@ -357,10 +357,13 @@ export const createEvent = async (formData: FormData) => {
   }
 };
 
-export const createEventForm = async (form: FormData) => {
+export const createEventForm = async (form: FormData,token: string | null) => {
   try {
     const response = await axios.post(`${BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.CREATE_EVENT}`, form, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+       headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        },
     });
     return { success: true, data: response.data };
   } catch (error: any) {
