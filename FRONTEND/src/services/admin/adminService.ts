@@ -163,9 +163,9 @@ export const deleteSubscription = async (planId: string) => {
 export const getAllSubscriptions = async () => {
   try {
     const response = await api.get(ADMIN_ENDPOINTS.ALL_SUBSCRIPTIONS);
-    return response.data;
+    return response.data.subscriptions || []; 
   } catch (error: any) {
     console.error("Failed to fetch all subscriptions:", error);
     throw new Error(error.response?.data?.message || "Fetch failed");
   }
-}
+};

@@ -201,25 +201,29 @@ export default function AdminSubscription() {
 
         {/* Subscription Cards */}
         <div className="flex flex-wrap gap-6 justify-center">
-          {plans.map((plan, index) => (
-            <div
-              key={index}
-              className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center transform transition-all hover:scale-105"
-            >
+  {Array.isArray(plans) && plans.length > 0 ? (
+    plans.map((plan, index) => (
+      <div
+        key={index}
+        className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center transform transition-all hover:scale-105"
+      >
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">{plan.name}</h2>
+        <p className="text-2xl text-indigo-600 font-extrabold mb-4">
+          ₹{plan.price} <span className="text-base font-medium text-gray-500">/ {plan.days} days</span>
+        </p>
+        <button
+          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          onClick={() => handleDeletePlan(plan._id)}
+        >
+          Delete
+        </button>
+      </div>
+    ))
+  ) : (
+    <p className="text-gray-500 text-center mt-6">No subscription plans found.</p>
+  )}
+</div>
 
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">{plan.name}</h2>
-              <p className="text-2xl text-indigo-600 font-extrabold mb-4">
-                ₹{plan.price} <span className="text-base font-medium text-gray-500">/ {plan.days} days</span>
-              </p>
-              <button
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-                onClick={() => handleDeletePlan(plan._id)}
-              >
-                Delete
-              </button>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
