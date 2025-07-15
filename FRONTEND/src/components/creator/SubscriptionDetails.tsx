@@ -151,7 +151,7 @@ export default function SubscriptionDetails() {
 
                   if (result.isConfirmed) {
                     await axios.patch(
-                      `${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.CANCEL_SUBSCRIPTION}`,
+                      `${BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.CANCEL_SUBSCRIPTION(creator.id)}`,
                       {},
                       {
                         headers: { Authorization: `Bearer ${token}` }

@@ -217,6 +217,8 @@ checkLayoutSelected: async (creatorId: string) => {
   try {
     const url = `${BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.CHECK_LAYOUTS(creatorId)}`;
     const response = await fetch(url);
+    console.log("res",response);
+    
 
     if (!response.ok) {
       throw new Error("Failed to fetch layout data");

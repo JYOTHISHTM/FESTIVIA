@@ -43,7 +43,7 @@ const CreateEvent: React.FC = () => {
 
   useEffect(() => {
     const creator = JSON.parse(localStorage.getItem("creator") || '{}');
-    const creatorId = creator.id;
+    const creatorId = creator.id||creator._id;
 
     if (!creatorId) {
       console.log("No creatorId found, skipping fetch");

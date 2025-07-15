@@ -9,7 +9,6 @@ import { uploadMedia } from '../../services/creator/creatorService';
 const storedCreator = localStorage.getItem("creator");
 const creatorId = storedCreator ? JSON.parse(storedCreator).id : null;
 import { BASE_URL } from '../../config/config';
-// const socket = io("https://festivia-api.jothish.online");
 const socket = io(BASE_URL);
 type Message = {
   _id?: string;

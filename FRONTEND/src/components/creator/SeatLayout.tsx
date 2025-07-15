@@ -22,7 +22,8 @@ export default function SeatLayoutCreator() {
   const [balconyPrices, setBalconyPrices] = useState<BalconyPrices>({ normal: '', premium: '' });
   const [reclanarPrices, setReclanarPrices] = useState<ReclanarPrices>({ reclanar: '', reclanarPlus: '' });
   const [totalSeats, setTotalSeats] = useState<number>(40);
-
+  const Creator = JSON.parse(localStorage.getItem("creator") || "{}");
+  const creatorId = Creator._id || Creator.id;
   const navigate = useNavigate();
   const seatsPerRow = 8;
 
@@ -75,7 +76,7 @@ export default function SeatLayoutCreator() {
     }
 
     try {
-      const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.LAYOUTS}`, {
+      const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.LAYOUTS(creatorId)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(layoutData),

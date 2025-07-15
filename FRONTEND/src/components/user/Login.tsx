@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/slice/authSlice";
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
 import { Eye, EyeOff } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import api from '../../services/ApiService'
@@ -60,7 +62,8 @@ const LoginPage: React.FC = () => {
 
     try {
 
-      const res = await api.post("https://festivia-api.jothish.online/users/login",
+      // const res = await api.post("http://localhost:5001/users/login",
+      const res = await api.post(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.LOGIN}`,
         { email, password, role: "user" },
         { withCredentials: true }
       );

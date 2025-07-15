@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
 import axios from "axios";
 
 const VerifyOtp: React.FC = () => {
@@ -58,7 +60,11 @@ const VerifyOtp: React.FC = () => {
     const otpCode = otp.join("");
 
     try {
-      const response = await axios.post("https://festivia-api.jothish.online/users/verify-otp", { email, otp: otpCode,userType: "user" });
+const response = await axios.post(`${BASE_URL}${API_CONFIG.USER_ENDPOINTS.VERIFY_OTP}`, {
+  email,
+  otp: otpCode,
+  userType: "user",
+});
       if (response.data.success) {
         sessionStorage.removeItem("email");
         navigate("/user/login");
@@ -74,7 +80,10 @@ const VerifyOtp: React.FC = () => {
     inputRefs.current[0]?.focus(); 
     startTimer();
     try {
-      await axios.post("https://festivia-api.jothish.online/users/resend-otp", { email,type:"user" });
+await axios.post(`${BASE_URL}${API_CONFIG.USER_ENDPOINTS.RESEND_OTP}`, {
+  email,
+  type: "user",
+});
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to resend OTP");
     }

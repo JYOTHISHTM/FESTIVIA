@@ -6,6 +6,9 @@ import {
 } from "lucide-react";
 import Logo from "../../../assets/images/Screenshot 2025-03-07 173036.png";
 import { logout } from "../../../redux/slice/adminAuthSlice";
+import { BASE_URL } from '../../../config/config';
+import { API_CONFIG } from '../../../config/config';
+
 import { useDispatch } from "react-redux";
 
 const Navbar = () => {
@@ -28,7 +31,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("https://festivia-api.jothish.online/admin/logout", {
+      const response = await fetch(`${BASE_URL}/${API_CONFIG.ADMIN_ENDPOINTS.LOGOUT}`, {
         method: "POST",
         credentials: "include",
       });
@@ -38,7 +41,6 @@ const Navbar = () => {
         throw new Error(errorData.message || "Logout failed");
       }
 
-      console.log("✅ Logout successful");
 
       localStorage.removeItem("adminToken");
       sessionStorage.removeItem("admin");

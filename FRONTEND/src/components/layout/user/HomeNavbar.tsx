@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Calendar, Menu, X, User, LogOut, Home, Info,MessageCircle  } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { BASE_URL } from '../../../config/config';
+import { API_CONFIG } from '../../../config/config';
 import { logout } from '../../../redux/slice/authSlice';
 
 function App() {
@@ -12,7 +14,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("https://festivia-api.jothish.online/users/logout", {
+      const response = await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.LOGOUT}`, {
         method: "GET",
         credentials: "include",
       });

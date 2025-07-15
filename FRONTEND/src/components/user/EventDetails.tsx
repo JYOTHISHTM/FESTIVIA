@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../layout/user/HomeNavbar';
 import { Link } from "react-router-dom";
+import { BASE_URL } from '../../config/config';
+import { API_CONFIG } from '../../config/config';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
@@ -97,29 +99,29 @@ const EventDetails: React.FC = () => {
 
     const navigate = useNavigate()
 
-  const handleBookTicket = async () => {
-  try {
-    const userString = localStorage.getItem('user');
-    const user = userString ? JSON.parse(userString) : null;
+    const handleBookTicket = async () => {
+        try {
+            const userString = localStorage.getItem('user');
+            const user = userString ? JSON.parse(userString) : null;
 
-    const userId: string | undefined = user?.id || user?._id;
+            const userId: string | undefined = user?.id || user?._id;
 
-    if (!userId) {
-      alert("User not found");
-      return;
-    }
+            if (!userId) {
+                alert("User not found");
+                return;
+            }
 
-    const response = await userService.bookTicket(userId, id as any);
+            const response = await userService.bookTicket(userId, id as any);
 
-    if (response.success && response.sessionUrl) {
-      window.location.href = response.sessionUrl;
-    } else {
-      alert(response.error || "Booking failed");
-    }
-  } catch (error) {
-    console.error("Booking failed:", error);
-  }
-};
+            if (response.success && response.sessionUrl) {
+                window.location.href = response.sessionUrl;
+            } else {
+                alert(response.error || "Booking failed");
+            }
+        } catch (error) {
+            console.error("Booking failed:", error);
+        }
+    };
 
 
 
@@ -127,7 +129,7 @@ const EventDetails: React.FC = () => {
     useEffect(() => {
         const fetchEvent = async () => {
             try {
-                const response = await axios.get(`https://festivia-api.jothish.online/users/event/${id}`);
+                const response = await axios.get(`${BASE_URL}${API_CONFIG.USER_ENDPOINTS.EVENT(id as string)}`);
                 const eventData = response.data;
                 setEvent(eventData);
 
@@ -137,14 +139,15 @@ const EventDetails: React.FC = () => {
 
                     try {
                         const profileRes = await axios.get(
-                            `https://festivia-api.jothish.online/users/event-profile-info?creatorId=${eventData.creatorId}`
+                            `${BASE_URL}${API_CONFIG.USER_ENDPOINTS.EVENT_PROFILE(eventData.creatorId)}`
                         );
+
 
                         setCreatorProfile(profileRes.data);
                     } catch (profileError: any) {
                         if (profileError.response?.status === 404) {
                             console.warn("No profile found for creator");
-                            setCreatorProfile(null); // Important: clear it
+                            setCreatorProfile(null); 
                         } else {
                             console.error("Error fetching profile:", profileError);
                             setError('Failed to fetch creator profile');

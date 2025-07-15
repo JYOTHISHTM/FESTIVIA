@@ -2,13 +2,14 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import { userService } from "../../services/user/userService";
+import { API_CONFIG, BASE_URL } from "../../config/config";
 import { MessageCircle, Send, ArrowLeft, Download, Reply, X } from "lucide-react";
 import HomeNavbar from '../layout/user/HomeNavbar';
 
 const storedUser = localStorage.getItem("user");
 const userId = storedUser ? JSON.parse(storedUser).id : null;
 
-const socket = io("https://festivia-api.jothish.online");
+const socket = io(`${BASE_URL}`);
 
 type Message = {
   _id?: string;
@@ -58,13 +59,11 @@ const UserChatPage = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
-      // Validate file size (10MB limit)
       if (file.size > 10 * 1024 * 1024) {
         alert('File size must be less than 10MB');
         return;
       }
 
-      // Validate file type
       const allowedTypes = ['image/', 'video/', 'application/pdf', 'text/', 'application/msword', 'application/vnd.openxmlformats'];
       const isAllowed = allowedTypes.some(type => file.type.startsWith(type));
 
@@ -123,12 +122,10 @@ const UserChatPage = () => {
   useEffect(() => {
     if (!creatorId) return;
 
-    console.log("Setting up socket listeners for room:", roomId);
 
     socket.emit("join-room", roomId);
 
     const handleMessage = (msg: Message) => {
-      console.log("Received message:", msg);
       msg.timestamp = msg.timestamp ? new Date(msg.timestamp) : new Date();
       setMessages((prev) => [...prev, msg]);
     };
@@ -140,22 +137,18 @@ const UserChatPage = () => {
     };
 
     const handleTyping = () => {
-      console.log("Creator is typing");
       setIsTyping(true);
     };
 
     const handleStopTyping = () => {
-      console.log("Creator stopped typing");
       setIsTyping(false);
     };
 
     const handleUserOnline = () => {
-      console.log("Creator came online");
       setIsOnline(true);
     };
 
     const handleUserOffline = () => {
-      console.log("Creator went offline");
       setIsOnline(false);
     };
 
@@ -228,7 +221,7 @@ const UserChatPage = () => {
         const formData = new FormData();
         formData.append('file', selectedFile);
 
-        const res = await fetch('https://festivia-api.jothish.online/users/upload', {
+        const res = await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.UPLOAD}`, {
           method: 'POST',
           body: formData,
         });

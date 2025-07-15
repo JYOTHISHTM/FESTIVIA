@@ -20,7 +20,7 @@ interface Event {
 const EventsPage: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [_, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);   
   const [totalPages, setTotalPages] = useState(1); 
 
@@ -58,8 +58,36 @@ const EventsPage: React.FC = () => {
 }, [totalPages ]);
 
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+ if (loading) {
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+      gap: '16px',
+      padding: '20px'
+    }}>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          style={{
+            height: '120px',
+            backgroundColor: '#e2e2e2',
+            borderRadius: '8px',
+            animation: 'pulse 1.5s infinite',
+          }}
+        />
+      ))}
+
+      <style>{`
+        @keyframes pulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.5; }
+          100% { opacity: 1; }
+        }
+      `}</style>
+    </div>
+  );
+}
 
   return (
     <div className="flex min-h-screen bg-gray-100 overflow-hidden">

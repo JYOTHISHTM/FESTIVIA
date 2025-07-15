@@ -46,19 +46,28 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  const validate = () => {
-    const newErrors: Partial<Record<keyof Creator, string>> = {};
+const validate = () => {
+  const newErrors: Partial<Record<keyof Creator, string>> = {};
 
-    if (!updatedCreator.name.trim()) newErrors.name = "Name is required";
-    if (!updatedCreator.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updatedCreator.email)) {
-      newErrors.email = "Invalid email format";
-    }
+  // Name validation
+  if (!updatedCreator.name.trim()) {
+    newErrors.name = "Name is required";
+  } else if (!/^[A-Za-z\s]{2,50}$/.test(updatedCreator.name)) {
+    newErrors.name = "Name must only contain letters and spaces (2–50 chars)";
+  }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  // Email validation
+  if (!updatedCreator.email.trim()) {
+    newErrors.email = "Email is required";
+  } else if (!/^[a-z][\w.-]*@[a-z0-9.-]+\.[a-z]{2,}$/.test(updatedCreator.email)) {
+    newErrors.email = "Email must be in lowercase and properly formatted";
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
+
 
   const handleUpdate = async () => {
     if (!validate()) {

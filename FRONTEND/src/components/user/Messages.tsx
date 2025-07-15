@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../../services/user/userService';
 import HomeNavbar from '../layout/user/HomeNavbar';
+import { BASE_URL } from '../../config/config';
 import Footer from '../layout/user/Footer';
 
 
 import io from 'socket.io-client';
 
-const socket = io('https://festivia-api.jothish.online');
+const socket = io(`${BASE_URL}`);
 
 interface Chat {
   creatorName: string;

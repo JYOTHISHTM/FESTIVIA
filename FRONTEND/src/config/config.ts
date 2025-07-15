@@ -1,8 +1,8 @@
 
-// const BASE_URL = 'http://localhost:5001';
-export const BASE_URL = 'https://festivia-api.jothish.online'
+export const BASE_URL = 'http://localhost:5001';
+// export const BASE_URL = 'https://festivia-api.jothish.online'
 // const MAINTENANCE_MODE = true;
-const MAINTENANCE_MODE = false; 
+const MAINTENANCE_MODE = false;
 
 
 export const API_CONFIG = {
@@ -20,8 +20,6 @@ export const API_CONFIG = {
     EVENT_PROFILE_INFO: '/users/event-profile-info',
     ALL_CREATOR_POSTS: '/users/all-posts',
     BOOK_TICKET: '/users/events/book-ticket',
-
-
     HOME_EVENTS: '/users/home-events',
     EVENTS_BY_LOCATION: '/users/events-by-location',
     SAVE_LOCATION: '/users/location',
@@ -30,6 +28,20 @@ export const API_CONFIG = {
     POST_DETAILS_PAGE: "/users/post-details-page",
     AVAILABLE_PRIVATE_CREATORS: '/users/available-private-event-creators',
     CHAT_HISTORY: (roomId: string) => `/users/chat/${roomId}`,
+    EVENT: (id: string) => `/users/event/${id}`,
+    EVENT_PROFILE: (creatorId: string) => `/users/event-profile-info?creatorId=${creatorId}`,
+    SEND_OTP: '/users/send-otp',
+    VERIFY_OTP_FORGOT_PASSWORD: '/users/verify-otp-forgot-password',
+    LOGIN: '/users/login',
+    CANCEL_TICKET: (userId: string, ticketId: string) => `/users/${userId}/tickets/${ticketId}/cancel`,
+    RESET_PASSWORD: '/users/reset-password',
+    REGISTER: '/users/register',
+    UPLOAD: '/users/upload',
+    RESEND_OTP: '/users/resend-otp',
+    VERIFY_OTP: '/users/verify-otp',
+    WALLET_ENDPOINT:'/users/wallet',
+    ADD_MONEY:'/users/wallet/add',
+    CHECKOUT_SESSION:'users/wallet/checkout-session',
 
 
 
@@ -44,6 +56,7 @@ export const API_CONFIG = {
     SUBSCRIPTIONS_HISTORY: (page: number, limit: number) =>
       `/admin/subscriptions-history?page=${page}&limit=${limit}`,
     LOGIN: '/admin/login',
+    LOGOUT: '/admin/login',
     PUBLIC_EVENTS: '/admin/public-events',
     USERS: '/admin/users',
     TOGGLE_BLOCK_USER: (userId: string) => `/admin/toggle-block/${userId}`,
@@ -74,6 +87,7 @@ export const API_CONFIG = {
     ENDPOINTS: {
       SIGN_UP: '/sign-up',
       VERIFY_OTP: '/verify-otp',
+      LOGOUT: 'creator/logout',
       RESEND_OTP: '/resend-otp',
       TICKET_SUMMARY: '/ticket-summary',
       GET_LAYOUT_BY_ID: '/layout',
@@ -81,7 +95,6 @@ export const API_CONFIG = {
       CHECK_LAYOUTS: (creatorId: string) => `/check-layouts/${creatorId}`,
       CHAT_HISTORY: (roomId: string) => `/chat/${roomId}`,
       TICKET_USERS: '/ticket-users',
-
       GET_EVENT: (id: string) => `/event/${id}`,
       UPDATE_DESCRIPTION: (id: string) => `/update-description/${id}`,
       TOGGLE_LISTING: (id: string) => `/toggle-list/${id}`,
@@ -103,12 +116,13 @@ export const API_CONFIG = {
       VERIFY_OTP_FORGOT_PASSWORD: '/verify-otp-forgot-password',
       LOGIN: 'creator/login',
       RESEST_PASSWORD: '/reset-password',
-      LAYOUTS: (creatorId: string) => `layouts/${creatorId}`,
-      BUY_USING_WALLET: '/buy-using-wallet',
-      CANCEL_SUBSCRIPTION: (creatorId: string) => `/cancel-subscription/${creatorId}`,
+      LAYOUTS: (creatorId: string) => `creator/layouts/${creatorId}`,
+      BUY_USING_WALLET: 'creator/buy-using-wallet',
+      CANCEL_SUBSCRIPTION: (creatorId: string) => `/creator/cancel-subscription/${creatorId}`,
       SUBSCRIPTION_HISTORY: '/subscription-history',
-      WALLET_ENDPOINT: '/wallet',
-
+      WALLET_ENDPOINT: 'creator/wallet',
+      ADD_MONEY_TO_WALLET: 'creator/wallet/add',
+      CHECKOUT_SESSION: 'creator/wallet/checkout-session'
 
 
 

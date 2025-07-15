@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import Logo from "../../../assets/images/Screenshot 2025-03-07 173036.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { BASE_URL } from '../../../config/config';
+import { API_CONFIG } from '../../../config/config';
 import { logout } from "../../../redux/slice/creatorAuthSlice";
 
 import {
@@ -40,7 +42,7 @@ const SidebarNavigation = () => {
   
   const handleLogout = async () => {
     try {
-      const response = await fetch("https://festivia-api.jothish.online/creator/logout", {
+      const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.LOGOUT}`, {
         method: "POST",
         credentials: "include",
       });

@@ -5,6 +5,8 @@ import HomeNavbar from "../layout/user/HomeNavbar";
 import { Scissors } from "lucide-react";
 import Swal from 'sweetalert2';
 import { userService } from "../../services/user/userService";
+import { BASE_URL } from "../../config/config";
+import { API_CONFIG } from "../../config/config";
 
 type Ticket = {
   _id: string;
@@ -36,29 +38,29 @@ const MyTicketsPage = () => {
   const [totalPages, setTotalPages] = useState(1);
 
 
- const fetchTickets = async (page = 1) => {
-  try {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) return alert("User not logged in");
+  const fetchTickets = async (page = 1) => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) return alert("User not logged in");
 
-    const user = JSON.parse(storedUser);
-    const userId: string = user.id || user._id;
+      const user = JSON.parse(storedUser);
+      const userId: string = user.id || user._id;
 
-    const response = await userService.getUserTickets(userId, page);
+      const response = await userService.getUserTickets(userId, page);
 
-    if (response.success) {
-      setTickets(response.data.tickets);
-      setCurrentPage(response.data.currentPage);
-      setTotalPages(response.data.totalPages);
-    } else {
-      console.error("Ticket fetch error:", response.error);
+      if (response.success) {
+        setTickets(response.data.tickets);
+        setCurrentPage(response.data.currentPage);
+        setTotalPages(response.data.totalPages);
+      } else {
+        console.error("Ticket fetch error:", response.error);
+      }
+    } catch (error) {
+      console.error("Failed to fetch tickets:", error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Failed to fetch tickets:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
 
@@ -102,7 +104,7 @@ const MyTicketsPage = () => {
         return;
       }
 
-      await axios.post(`https://festivia-api.jothish.online/users/${userId}/tickets/${ticketId}/cancel`);
+      await axios.post(`${BASE_URL}${API_CONFIG.USER_ENDPOINTS.CANCEL_TICKET(userId, ticketId)}`);
 
       await Swal.fire('Cancelled', 'Ticket cancelled successfully and refund processed.', 'success');
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import Sidebar from '../layout/user/SideBar';
 import Navbar from '../layout/user/HomeNavbar';
+import { BASE_URL } from '../../config/config';
+import { API_CONFIG } from '../../config/config';
 import { useNavigate } from 'react-router';
 
 const WalletComponent = () => {
@@ -18,8 +20,6 @@ const WalletComponent = () => {
   const userData = localStorage.getItem('user');
   const userId = userData ? JSON.parse(userData)._id : null;
 
-  const API_BASE_URL = 'https://festivia-api.jothish.online';
-  const WALLET_ENDPOINT = `${API_BASE_URL}/users/wallet`;
 
   const fetchWallet = async () => {
     if (!userId) {
@@ -29,7 +29,7 @@ const WalletComponent = () => {
 
     setIsLoading(true);
     try {
-      const res = await fetch(`${WALLET_ENDPOINT}/${userId}`);
+      const res = await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.WALLET_ENDPOINT}/${userId}`);
       const data = await res.json();
       if (res.ok) {
         const walletData = data.data;
@@ -53,7 +53,7 @@ const WalletComponent = () => {
   const updateWallet = async (userId: string, amount: number) => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}/users/wallet/add`, {
+      const res = await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.ADD_MONEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, amount }),
@@ -74,7 +74,7 @@ const WalletComponent = () => {
   const createStripeSession = async (userId: string, amount: number) => {
     try {
       setIsLoading(true);
-      const res = await fetch(`${API_BASE_URL}/users/wallet/checkout-session`, {
+      const res = await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.CHECKOUT_SESSION}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, amount }),

@@ -7,7 +7,8 @@ import { userService } from '../../services/user/userService';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/slice/authSlice'; 
-
+import { BASE_URL } from '../../config/config';
+import { API_CONFIG } from '../../config/config';
 export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -71,7 +72,7 @@ export default function ChangePassword() {
           },
         });
 
-        await fetch("https://festivia-api.jothish.online/users/logout", {
+        await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.LOGOUT}`, {
           method: "GET",
           credentials: "include",
         });
