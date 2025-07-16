@@ -12,7 +12,7 @@ export const API_CONFIG = {
   USER_ENDPOINTS: {
     EVENTS: '/users/public-events',
     WALLET: '/users/wallet',
-    LOGOUT: '/users/logout',
+    LOGOUT: 'users/logout',
     CHANGE_PASSWORD: '/users/change-password',
     EVENT_TYPES: '/users/event-types',
     WALLET_BOOKING: '/users/wallet-ticket-booking',
@@ -32,7 +32,7 @@ export const API_CONFIG = {
     EVENT_PROFILE: (creatorId: string) => `/users/event-profile-info?creatorId=${creatorId}`,
     SEND_OTP: '/users/send-otp',
     VERIFY_OTP_FORGOT_PASSWORD: '/users/verify-otp-forgot-password',
-    LOGIN: '/users/login',
+    LOGIN: 'users/login',
     CANCEL_TICKET: (userId: string, ticketId: string) => `/users/${userId}/tickets/${ticketId}/cancel`,
     RESET_PASSWORD: '/users/reset-password',
     REGISTER: '/users/register',
