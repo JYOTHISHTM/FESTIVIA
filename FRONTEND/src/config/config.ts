@@ -113,7 +113,7 @@ export const API_CONFIG = {
       ALL_POSTS: '/all-posts',
       UPDATE_PROFILE_IMAGE: '/update-profile-image',
       SEND_OTP: 'creator/send-otp',
-      VERIFY_OTP_FORGOT_PASSWORD: '/verify-otp-forgot-password',
+      VERIFY_OTP_FORGOT_PASSWORD: 'creator/verify-otp-forgot-password',
       LOGIN: 'creator/login',
       RESEST_PASSWORD: '/reset-password',
       LAYOUTS: (creatorId: string) => `creator/layouts/${creatorId}`,
