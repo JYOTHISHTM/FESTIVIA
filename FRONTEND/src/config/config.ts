@@ -56,7 +56,7 @@ export const API_CONFIG = {
     SUBSCRIPTIONS_HISTORY: (page: number, limit: number) =>
       `/admin/subscriptions-history?page=${page}&limit=${limit}`,
     LOGIN: '/admin/login',
-    LOGOUT: '/admin/logout',
+    LOGOUT: 'admin/logout',
     PUBLIC_EVENTS: '/admin/public-events',
     USERS: '/admin/users',
     TOGGLE_BLOCK_USER: (userId: string) => `/admin/toggle-block/${userId}`,
