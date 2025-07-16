@@ -57,7 +57,7 @@ function App() {
                 <div className="absolute -inset-1 bg-emerald-100 rounded-full blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
-                EventPro
+                FESTIVIA
               </span>
             </div>
 
