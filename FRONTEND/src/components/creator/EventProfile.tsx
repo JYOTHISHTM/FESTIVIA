@@ -43,34 +43,73 @@ const HeroSection = () => {
     setTempValue(value);
   };
 
+  const isMeaningfulText = (value: string) => {
+  const cleaned = value.trim().replace(/[^a-zA-Z0-9]/g, '');
+  return cleaned.length > 2; // Allow only if there are at least 3 alphanumeric characters
+};
+
+
+  // const handleSave = async () => {
+  //   if (!editingField) return;
+
+  //   try {
+  //     const creatorString = localStorage.getItem("creator");
+  //     const creator = creatorString ? JSON.parse(creatorString) : null;
+
+  //     if (!creator?.id) {
+  //       console.error("Creator ID not available");
+  //       return;
+  //     }
+
+  //     await creatorService.updateEventProfileField(
+  //       creator.id,
+  //       editingField,
+  //       tempValue
+  //     );
+
+  //     if (editingField === "profileName") setProfileName(tempValue);
+  //     if (editingField === "profileBio") setProfileBio(tempValue);
+  //     if (editingField === "eventCount") setEventCount(tempValue);
+  //     if (editingField === "profileImage") setProfileImage(tempValue);
+
+  //     setEditingField(null);
+  //   } catch (error) {
+  //     console.error("Failed to update:", error);
+  //   }
+  // };
+
   const handleSave = async () => {
-    if (!editingField) return;
+  if (!editingField) return;
 
-    try {
-      const creatorString = localStorage.getItem("creator");
-      const creator = creatorString ? JSON.parse(creatorString) : null;
+  if (!isMeaningfulText(tempValue)) {
+    alert("Please enter a valid value (not empty or meaningless characters)");
+    return;
+  }
 
-      if (!creator?.id) {
-        console.error("Creator ID not available");
-        return;
-      }
+  try {
+    const creatorString = localStorage.getItem("creator");
+    const creator = creatorString ? JSON.parse(creatorString) : null;
 
-      await creatorService.updateEventProfileField(
-        creator.id,
-        editingField,
-        tempValue
-      );
-
-      if (editingField === "profileName") setProfileName(tempValue);
-      if (editingField === "profileBio") setProfileBio(tempValue);
-      if (editingField === "eventCount") setEventCount(tempValue);
-      if (editingField === "profileImage") setProfileImage(tempValue);
-
-      setEditingField(null);
-    } catch (error) {
-      console.error("Failed to update:", error);
+    if (!creator?.id) {
+      console.error("Creator ID not available");
+      return;
     }
-  };
+
+    await creatorService.updateEventProfileField(
+      creator.id,
+      editingField,
+      tempValue
+    );
+
+    if (editingField === "profileName") setProfileName(tempValue);
+    if (editingField === "profileBio") setProfileBio(tempValue);
+    if (editingField === "eventCount") setEventCount(tempValue);
+
+    setEditingField(null);
+  } catch (error) {
+    console.error("Failed to update:", error);
+  }
+};
 
 
   useEffect(() => {
@@ -201,36 +240,70 @@ const HeroSection = () => {
 
 
 
-  const handleSaveImage = async () => {
-    if (!newImageFile) return;
+  // const handleSaveImage = async () => {
+  //   if (!newImageFile) return;
 
-    const creatorString = localStorage.getItem("creator");
-    const creator = creatorString ? JSON.parse(creatorString) : null;
+  //   const creatorString = localStorage.getItem("creator");
+  //   const creator = creatorString ? JSON.parse(creatorString) : null;
 
-    if (!creator?.id) {
-      console.error("Creator ID not available");
-      return;
-    }
+  //   if (!creator?.id) {
+  //     console.error("Creator ID not available");
+  //     return;
+  //   }
 
-    const formData = new FormData();
-    formData.append("profileImage", newImageFile);
-    formData.append("creatorId", creator.id);
+  //   const formData = new FormData();
+  //   formData.append("profileImage", newImageFile);
+  //   formData.append("creatorId", creator.id);
 
-    try {
-      setIsSaving(true);
+  //   try {
+  //     setIsSaving(true);
 
-      const res = await updateProfileImage(formData);
+  //     const res = await updateProfileImage(formData);
 
-      setProfileImage(res.data.profileImage);
-      setNewImageFile(null);
-      setIsEditingImage(false);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+  //     setProfileImage(res.data.profileImage);
+  //     setNewImageFile(null);
+  //     setIsEditingImage(false);
+  //   } catch (error) {
+  //     console.error("Error uploading image:", error);
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
 
+const handleSaveImage = async () => {
+  if (!newImageFile) return;
+
+  // ✅ Check for valid image file type
+  const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+  if (!validTypes.includes(newImageFile.type)) {
+    alert('Only image files (JPG, PNG, WEBP) are allowed');
+    return;
+  }
+
+  const creatorString = localStorage.getItem("creator");
+  const creator = creatorString ? JSON.parse(creatorString) : null;
+
+  if (!creator?.id) {
+    console.error("Creator ID not available");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("profileImage", newImageFile);
+  formData.append("creatorId", creator.id);
+
+  try {
+    setIsSaving(true);
+    const res = await updateProfileImage(formData);
+    setProfileImage(res.data.profileImage);
+    setNewImageFile(null);
+    setIsEditingImage(false);
+  } catch (error) {
+    console.error("Error uploading image:", error);
+  } finally {
+    setIsSaving(false);
+  }
+};
 
 
 

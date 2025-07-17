@@ -174,20 +174,25 @@ const WalletComponent = () => {
   }, [navigate, userId]);
 
   const handleAdd = async () => {
-    if (!userId) return navigate('/user/login');
-    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
-      setMessage('Please enter a valid amount');
-      return;
-    }
+  if (!userId) return navigate('/user/login');
 
-    const parsedAmount = parseInt(amount, 10);
-    const response = await createStripeSession(userId, parsedAmount);
-    if (response.success) {
-      window.location.href = response.data.url;
-    } else {
-      setMessage(response.error);
-    }
-  };
+  const parsedAmount = parseInt(amount, 10);
+
+  if (!amount || isNaN(parsedAmount) || parsedAmount < 100 || parsedAmount > 9999) {
+    setMessage('Please enter a valid amount between ₹100 and ₹9999');
+    return;
+  }
+
+  setMessage(''); // Clear previous errors
+
+  const response = await createStripeSession(userId, parsedAmount);
+  if (response.success) {
+    window.location.href = response.data.url;
+  } else {
+    setMessage(response.error);
+  }
+};
+
 
   const filteredTransactions = transactions.filter((txn) =>
     filter === 'all' ? true : txn.type === filter
@@ -229,11 +234,19 @@ const WalletComponent = () => {
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="Enter amount"
-              className="p-3 border border-gray-200 rounded-lg w-full focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all"
+              placeholder="Enter amount (₹100 - ₹9999)"
+              min={100}
+              max={9999}
+              className={`p-3 border ${message ? 'border-red-500' : 'border-gray-200'
+                } rounded-lg w-full focus:outline-none focus:ring-1 ${message ? 'focus:ring-red-500' : 'focus:ring-gray-400'
+                } transition-all`}
               disabled={isLoading}
             />
-            {message && <p className="mt-2 text-sm text-gray-600">{message}</p>}
+
+            {message && (
+              <p className="mt-2 text-sm text-red-600 font-medium">{message}</p>
+            )}
+
           </div>
 
           <div className="mb-6">

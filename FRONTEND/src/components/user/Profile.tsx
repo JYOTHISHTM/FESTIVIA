@@ -54,20 +54,43 @@ const Profile = () => {
   const validate = () => {
     const newErrors: Partial<Record<keyof User, string>> = {};
 
-    if (!updatedUser.name.trim()) newErrors.name = "Name is required";
+    // if (!updatedUser.name.trim()) newErrors.name = "Name is required";
+
+    if (!updatedUser.name.trim()) {
+      newErrors.name = "Name is required";
+    } else if (!/^[A-Za-z\s]{2,50}$/.test(updatedUser.name)) {
+      newErrors.name = "Name must only contain letters and spaces (2–50 chars)";
+    }
+
+
+    // Email validation
     if (!updatedUser.email.trim()) {
       newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updatedUser.email)) {
-      newErrors.email = "Invalid email format";
+    } else if (!/^[a-z][\w.-]*@[a-z0-9.-]+\.[a-z]{2,}$/.test(updatedUser.email)) {
+      newErrors.email = "Email must be in lowercase and properly formatted";
     }
+
+    // if (!updatedUser.email.trim()) {
+    //   newErrors.email = "Email is required";
+    // } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updatedUser.email)) {
+    //   newErrors.email = "Invalid email format";
+    // }
 
     if (updatedUser.age && (parseInt(updatedUser.age) <= 0 || isNaN(parseInt(updatedUser.age)))) {
       newErrors.age = "Enter a valid age";
     }
 
-    if (updatedUser.phoneNumber && !/^\d{10}$/.test(updatedUser.phoneNumber)) {
-      newErrors.phoneNumber = "Phone number must be 10 digits";
+    // if (updatedUser.phoneNumber && !/^\d{10}$/.test(updatedUser.phoneNumber)) {
+    //   newErrors.phoneNumber = "Phone number must be 10 digits";
+    // }
+
+    if (
+      updatedUser.phoneNumber &&
+      (!/^\d{10}$/.test(updatedUser.phoneNumber) || /^0+$/.test(updatedUser.phoneNumber))
+    ) {
+      newErrors.phoneNumber = "Phone number must be 10 digits and cannot be all zeros";
     }
+
 
     if (updatedUser.gender && !["Male", "Female"].includes(updatedUser.gender)) {
       newErrors.gender = "Select a valid gender";

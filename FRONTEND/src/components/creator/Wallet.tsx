@@ -141,8 +141,8 @@ const WalletComponent = () => {
 
 
   useEffect(() => {
-  console.log("selectedMedia:", message);
-}, [message ]);
+    console.log("selectedMedia:", message);
+  }, [message]);
 
 
   useEffect(() => {
@@ -153,21 +153,42 @@ const WalletComponent = () => {
     }
   }, [navigate, creatorId, fetchWallet]);
 
-  const handleAdd = async () => {
-    if (!creatorId) return navigate('/creator/login');
-    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
-      setMessage('Please enter a valid amount');
-      return;
-    }
+  // const handleAdd = async () => {
+  //   if (!creatorId) return navigate('/creator/login');
+  //   if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+  //     setMessage('Please enter a valid amount');
+  //     return;
+  //   }
 
-    const parsedAmount = parseInt(amount, 10);
-    const response = await createStripeSession(creatorId, parsedAmount);
-    if (response.success) {
-      window.location.href = response.data.url;
-    } else {
-      setMessage(response.error);
-    }
-  };
+  //   const parsedAmount = parseInt(amount, 10);
+  //   const response = await createStripeSession(creatorId, parsedAmount);
+  //   if (response.success) {
+  //     window.location.href = response.data.url;
+  //   } else {
+  //     setMessage(response.error);
+  //   }
+  // };
+
+  const handleAdd = async () => {
+  if (!creatorId) return navigate('/creator/login');
+
+  const parsedAmount = parseInt(amount, 10);
+
+  if (!amount || isNaN(parsedAmount) || parsedAmount < 100 || parsedAmount > 9999) {
+    setMessage('Please enter a valid amount between ₹100 and ₹9999');
+    return;
+  }
+
+  setMessage(''); // Clear any previous error
+  const response = await createStripeSession(creatorId, parsedAmount);
+  if (response.success) {
+    window.location.href = response.data.url;
+  } else {
+    setMessage(response.error);
+  }
+};
+
+
 
   const filteredTransactions = transactions.filter((txn) =>
     filter === 'all' ? true : txn.type === filter
@@ -210,10 +231,20 @@ const WalletComponent = () => {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="Enter amount"
-                className="p-3 border border-gray-200 rounded-lg w-full focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all"
+                min={100}
+                max={9999}
+                className={`p-3 border ${message ? 'border-red-500' : 'border-gray-200'
+                  } rounded-lg w-full focus:outline-none focus:ring-1 ${message ? 'focus:ring-red-500' : 'focus:ring-gray-400'
+                  } transition-all`}
                 disabled={isLoading || isProcessingPayment}
               />
+
+              {/* Red error message */}
+              {message && (
+                <p className="mt-2 text-sm text-red-600 font-medium">{message}</p>
+              )}
             </div>
+
 
             <div className="mb-6">
               <div className="inline-flex border border-gray-200 rounded-lg overflow-hidden">
@@ -222,8 +253,8 @@ const WalletComponent = () => {
                     key={type}
                     onClick={() => setFilter('deduct' as 'all' | 'add' | 'deduct')}
                     className={`px-4 py-2 text-sm font-medium transition-colors ${filter === type
-                        ? 'bg-gray-100 text-gray-900'
-                        : 'bg-white text-gray-600 hover:bg-gray-50'
+                      ? 'bg-gray-100 text-gray-900'
+                      : 'bg-white text-gray-600 hover:bg-gray-50'
                       }`}
                   >
                     {type === 'deduct' ? 'Deducts' : type === 'add' ? 'Credited' : 'All'}
@@ -261,8 +292,8 @@ const WalletComponent = () => {
                         <td className="px-6 py-4">
                           <span
                             className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${txn.type === 'add'
-                                ? 'bg-green-50 text-green-700'
-                                : 'bg-red-50 text-red-700'
+                              ? 'bg-green-50 text-green-700'
+                              : 'bg-red-50 text-red-700'
                               }`}
                           >
                             {txn.type === 'add' ? 'Credited' : 'Deduct'}
@@ -289,8 +320,8 @@ const WalletComponent = () => {
                       key={i}
                       onClick={() => setCurrentPage(i + 1)}
                       className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-colors ${currentPage === i + 1
-                          ? 'bg-gray-900 text-white'
-                          : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
+                        ? 'bg-gray-900 text-white'
+                        : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
                         }`}
                     >
                       {i + 1}
