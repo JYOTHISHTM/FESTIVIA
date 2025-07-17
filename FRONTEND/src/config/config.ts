@@ -71,7 +71,7 @@ export const API_CONFIG = {
     CREATE_SUBSCRIPTION: `/admin/create-subscription`,
     DELETE_SUBSCRIPTION: (planId: string) => `/admin/delete-subscription/${planId}`,
     CREATOR_REAPPLY: (creatorId: string) => `creator-reapply/${creatorId}`,
- CREATOR_STATUS: "/creator-status",
+ CREATOR_STATUS: "/admin/creator-status",
 
 
 
