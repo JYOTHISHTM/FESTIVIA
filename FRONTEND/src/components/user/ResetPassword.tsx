@@ -4,6 +4,7 @@ import { BASE_URL } from "../../config/config";
 import { API_CONFIG } from "../../config/config";
 import * as Yup from "yup";
 import { useNavigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function ResetPassword() {
   const navigate = useNavigate();
@@ -46,20 +47,24 @@ function ResetPassword() {
         });
 
         const data = await response.json();
+
         if (response.ok) {
-          console.log("✅ Password updated successfully");
-          navigate("/user/login");
+          Swal.fire("Success", "Password reset successfully!", "success").then(() => {
+            navigate("/user/login");
+          });
         } else {
-          alert(data.message || "Failed to reset password");
+          if (data.message === "New password cannot be the same as the old password") {
+            Swal.fire("Warning", "New password must be different from the old password.", "warning");
+          } else {
+            Swal.fire("Error", data.message || "Failed to reset password", "error");
+          }
         }
       } catch (error) {
         console.error("❌ Error:", error);
-        alert("Something went wrong.");
+        Swal.fire("Error", "Something went wrong.", "error");
       }
     },
   });
-
-
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">

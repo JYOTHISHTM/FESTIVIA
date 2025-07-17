@@ -42,7 +42,6 @@ const HeroSection = () => {
   const startEditing = (field: any, value: any) => {
     setEditingField(field);
     setTempValue(value);
-    // Clear error when starting to edit
     setFormErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
@@ -94,7 +93,6 @@ const HeroSection = () => {
   const addEventType = async () => {
     const trimmed = newEventType.trim();
 
-    // Validate: non-empty, at least 3 alphanumeric characters, no special-only strings
     if (!trimmed || /^[^a-zA-Z0-9]*$/.test(trimmed) || trimmed.length < 3) {
       setFormErrors((prev) => ({
         ...prev,
@@ -220,10 +218,8 @@ const HeroSection = () => {
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Clear previous image errors
       setFormErrors((prev) => ({ ...prev, profileImage: "" }));
       
-      // Check for valid image file type
       const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
       if (!validTypes.includes(file.type)) {
         setFormErrors((prev) => ({
@@ -233,7 +229,6 @@ const HeroSection = () => {
         return;
       }
 
-      // Check file size (e.g., max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setFormErrors((prev) => ({
           ...prev,

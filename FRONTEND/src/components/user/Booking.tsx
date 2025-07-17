@@ -135,24 +135,38 @@ const handleBooking = async () => {
       boxColor = color;
     }
 
-    const toggleSeat = () => {
-      if (isBooked) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Seat Already Booked',
-          text: `Seat ${seatNumber} is already booked!`,
-          timer: 2000,
-          showConfirmButton: false
-        });
-        return;
-      }
+   const toggleSeat = () => {
+  if (isBooked) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Seat Already Booked',
+      text: `Seat ${seatNumber} is already booked!`,
+      timer: 2000,
+      showConfirmButton: false
+    });
+    return;
+  }
 
-      setSelectedSeats((prev) =>
-        prev.includes(seatNumber)
-          ? prev.filter((s) => s !== seatNumber)
-          : [...prev, seatNumber]
-      );
-    };
+  const isAlreadySelected = selectedSeats.includes(seatNumber);
+
+  if (!isAlreadySelected && selectedSeats.length >= 10) {
+    Swal.fire({
+      icon: 'info',
+      title: 'Limit Reached',
+      text: 'You can only select up to 10 seats at a time.',
+      timer: 2500,
+      showConfirmButton: false
+    });
+    return;
+  }
+
+  setSelectedSeats((prev) =>
+    isAlreadySelected
+      ? prev.filter((s) => s !== seatNumber)
+      : [...prev, seatNumber]
+  );
+};
+
 
     return (
       <div
@@ -482,17 +496,10 @@ const handleBooking = async () => {
             Wallet
           </label>
 
-          {/* <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={paymentMethod === 'stripe'}
-              onChange={() => setPaymentMethod(paymentMethod === 'stripe' ? null : 'stripe')}
-            />
-            Stripe
-          </label> */}
+        
         </div>
 
-        {/* Book button */}
+       
         <div className="mt-6 text-center">
           <button
             className={`px-6 py-2 rounded text-white ${paymentMethod ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'

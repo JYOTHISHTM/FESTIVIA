@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from "../../config/config";
 import { API_CONFIG } from "../../config/config";
+import Swal from "sweetalert2";
 
 
 type LayoutType = 'normal' | 'withbalcony' | 'reclanar' | 'centeredscreen';
@@ -28,71 +29,87 @@ export default function SeatLayoutCreator() {
   const seatsPerRow = 8;
 
   const isPriceValid = (): boolean => {
-    if (layoutType === 'normal' || layoutType === 'centeredscreen') {
-      return normalPrice !== '' && normalPrice > 0;
+  if (layoutType === 'normal' || layoutType === 'centeredscreen') {
+    return normalPrice !== '' && normalPrice > 0;
+  }
+  if (layoutType === 'withbalcony') {
+    if (
+      balconyPrices.normal === '' ||
+      balconyPrices.premium === '' ||
+      balconyPrices.normal <= 0 ||
+      balconyPrices.premium <= 0
+    ) {
+      Swal.fire("Warning", "Please enter both balcony prices greater than 0.", "warning");
+      return false;
     }
-    if (layoutType === 'withbalcony') {
-      return (
-        balconyPrices.normal !== '' &&
-        balconyPrices.premium !== '' &&
-        balconyPrices.normal > 0 &&
-        balconyPrices.premium > 0
-      );
+    if (balconyPrices.premium <= balconyPrices.normal) {
+      Swal.fire("Invalid Prices", "Premium price must be greater than Normal price.", "warning");
+      return false;
     }
-    if (layoutType === 'reclanar') {
-      return (
-        reclanarPrices.reclanar !== '' &&
-        reclanarPrices.reclanarPlus !== '' &&
-        reclanarPrices.reclanar > 0 &&
-        reclanarPrices.reclanarPlus > 0
-      );
+    return true;
+  }
+  if (layoutType === 'reclanar') {
+    if (
+      reclanarPrices.reclanar === '' ||
+      reclanarPrices.reclanarPlus === '' ||
+      reclanarPrices.reclanar <= 0 ||
+      reclanarPrices.reclanarPlus <= 0
+    ) {
+      Swal.fire("Warning", "Please enter both reclanar prices greater than 0.", "warning");
+      return false;
     }
-    return false;
+    if (reclanarPrices.reclanarPlus <= reclanarPrices.reclanar) {
+      Swal.fire("Invalid Prices", "Reclanar Plus price must be greater than Reclanar price.", "warning");
+      return false;
+    }
+    return true;
+  }
+  return false;
+};
+
+
+ const saveLayout = async () => {
+  if (!isPriceValid()) return;
+
+  const layoutData: any = {
+    layoutType,
+    totalSeats,
   };
 
-  const saveLayout = async () => {
-    if (!isPriceValid()) {
-      alert('Please enter all required prices before saving.');
-      return;
-    }
-
-    const layoutData: any = {
-      layoutType,
-      totalSeats,
+  if (layoutType === 'normal' || layoutType === 'centeredscreen') {
+    layoutData.price = Number(normalPrice);
+  } else if (layoutType === 'withbalcony') {
+    layoutData.price = {
+      normal: Number(balconyPrices.normal),
+      premium: Number(balconyPrices.premium),
     };
+  } else if (layoutType === 'reclanar') {
+    layoutData.price = {
+      reclanar: Number(reclanarPrices.reclanar),
+      reclanarPlus: Number(reclanarPrices.reclanarPlus),
+    };
+  }
 
-    if (layoutType === 'normal' || layoutType === 'centeredscreen') {
-      layoutData.price = Number(normalPrice);
-    } else if (layoutType === 'withbalcony') {
-      layoutData.price = {
-        normal: Number(balconyPrices.normal),
-        premium: Number(balconyPrices.premium),
-      };
-    } else if (layoutType === 'reclanar') {
-      layoutData.price = {
-        reclanar: Number(reclanarPrices.reclanar),
-        reclanarPlus: Number(reclanarPrices.reclanarPlus),
-      };
-    }
+  try {
+    const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.LAYOUTS(creatorId)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(layoutData),
+    });
 
-    try {
-      const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.LAYOUTS(creatorId)}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(layoutData),
-      });
-
-      if (response.ok) {
-        alert('Layout saved successfully!');
+    if (response.ok) {
+      Swal.fire("Success", "Layout saved successfully!", "success").then(() => {
         navigate('/creator/create-event');
-      } else {
-        alert('Failed to save layout.');
-      }
-    } catch (error) {
-      console.error(error);
-      alert('Error saving layout.');
+      });
+    } else {
+      Swal.fire("Error", "Failed to save layout.", "error");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    Swal.fire("Error", "Something went wrong while saving layout.", "error");
+  }
+};
+
 
   const seatBox = (label: number | string, color = 'bg-gray-400') => (
     <div

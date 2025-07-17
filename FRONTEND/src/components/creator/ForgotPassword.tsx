@@ -3,6 +3,8 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../config/config";
 import { API_CONFIG } from "../../config/config";
+import Swal from "sweetalert2";
+
 interface FormValues {
   email: string;
 }
@@ -20,8 +22,7 @@ function ForgotOtp() {
   const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   const [emailValue, setEmailValue] = useState<string>("");
-
-  const onEmailSubmit: SubmitHandler<FormValues> = async (data) => {
+ const onEmailSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       const response = await fetch(`${BASE_URL}/${API_CONFIG.CREATOR.ENDPOINTS.SEND_OTP}`, {
         method: "POST",
@@ -37,15 +38,15 @@ function ForgotOtp() {
         console.log("✅ OTP sent to:", data.email);
         setEmailSubmitted(true);
         setEmailValue(data.email);
+        Swal.fire("Success", "OTP sent successfully!", "success");
       } else {
-        alert(resData.message || "Failed to send OTP");
+        Swal.fire("Error", resData.message || "Failed to send OTP", "error");
       }
     } catch (error) {
       console.error("❌ Error sending OTP:", error);
-      alert("Something went wrong");
+      Swal.fire("Error", "Something went wrong", "error");
     }
   };
-
 
   const handleOtpChange = (value: string, index: number) => {
     if (!/^\d*$/.test(value)) return;
@@ -77,23 +78,19 @@ function ForgotOtp() {
         });
 
         const data = await response.json();
-        if (response.ok) {
-
-        } else {
-          alert(data.message || "Failed to send OTP");
-        }
 
         if (response.ok) {
+          Swal.fire("Success", "OTP verified successfully!", "success");
           navigate("/creator/reset-password", { state: { email: emailValue } });
         } else {
-          alert(data.message || "❌ Invalid OTP");
+          Swal.fire("Error", data.message || "❌ Invalid OTP", "error");
         }
       } catch (error) {
         console.error("❌ Error verifying OTP:", error);
-        alert("Something went wrong. Please try again.");
+        Swal.fire("Error", "Something went wrong. Please try again.", "error");
       }
     } else {
-      alert("Please enter a valid 4-digit OTP");
+      Swal.fire("Warning", "Please enter a valid 4-digit OTP", "warning");
     }
   };
 

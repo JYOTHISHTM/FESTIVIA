@@ -3,6 +3,8 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../config/config";
 import { API_CONFIG } from "../../config/config";
+import Swal from "sweetalert2";
+
 interface FormValues {
   email: string;
 }
@@ -21,81 +23,77 @@ function ForgotOtp() {
 
   const [emailValue, setEmailValue] = useState<string>("");
 
-  const onEmailSubmit: SubmitHandler<FormValues> = async (data) => {
+const onEmailSubmit: SubmitHandler<FormValues> = async (data) => {
+  try {
+    const response = await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.SEND_OTP}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: data.email, type: "user" }),
+    });
+
+    const resData = await response.json();
+
+    if (response.ok) {
+      console.log("✅ OTP sent to:", data.email);
+      setEmailSubmitted(true);
+      setEmailValue(data.email);
+      Swal.fire("Success", "OTP sent successfully!", "success");
+    } else {
+      Swal.fire("Error", resData.message || "Failed to send OTP", "error");
+    }
+  } catch (error) {
+    console.error("❌ Error sending OTP:", error);
+    Swal.fire("Error", "Something went wrong", "error");
+  }
+};
+
+const handleOtpChange = (value: string, index: number) => {
+  if (!/^\d*$/.test(value)) return;
+
+  const newOtp = [...otp];
+  newOtp[index] = value;
+  setOtp(newOtp);
+
+  if (value && index < otpRefs.current.length - 1) {
+    otpRefs.current[index + 1]?.focus();
+  }
+};
+
+const handleOtpSubmit = async () => {
+  const enteredOtp = otp.join("");
+
+  if (enteredOtp.length === 4) {
     try {
-      const response = await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.SEND_OTP}`, {
+      const response = await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.VERIFY_OTP_FORGOT_PASSWORD}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: data.email,type:"user" }),
+        body: JSON.stringify({
+          email: emailValue,
+          otp: enteredOtp,
+          type: "user",
+        }),
       });
 
-      const resData = await response.json();
+      const data = await response.json();
 
       if (response.ok) {
-        console.log("✅ OTP sent to:", data.email);
-        setEmailSubmitted(true);
-        setEmailValue(data.email);
+        Swal.fire("Success", "OTP verified successfully!", "success");
+        navigate("/user/reset-password", { state: { email: emailValue } });
       } else {
-        alert(resData.message || "Failed to send OTP");
+        Swal.fire("Error", data.message || "❌ Invalid OTP", "error");
       }
     } catch (error) {
-      console.error("❌ Error sending OTP:", error);
-      alert("Something went wrong");
+      console.error("❌ Error verifying OTP:", error);
+      Swal.fire("Error", "Something went wrong. Please try again.", "error");
     }
-  };
-
-
-  const handleOtpChange = (value: string, index: number) => {
-    if (!/^\d*$/.test(value)) return; 
-
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    if (value && index < otpRefs.current.length - 1) {
-      otpRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleOtpSubmit = async () => {
-    const enteredOtp = otp.join("");
-
-    if (enteredOtp.length === 4) {
-      try {
-        const response = await fetch(`${BASE_URL}/${API_CONFIG.USER_ENDPOINTS.VERIFY_OTP_FORGOT_PASSWORD}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: emailValue,
-            otp: enteredOtp,
-            type: "user", 
-          }),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-         
-        } else {
-          alert(data.message || "Failed to send OTP");
-        }
-
-        if (response.ok) {
-          navigate("/user/reset-password", { state: { email: emailValue } });
-        } else {
-          alert(data.message || "❌ Invalid OTP");
-        }
-      } catch (error) {
-        console.error("❌ Error verifying OTP:", error);
-        alert("Something went wrong. Please try again.");
-      }
-    } else {
-      alert("Please enter a valid 4-digit OTP");
-    }
-  };
+  } else {
+    Swal.fire("Warning", "Please enter a valid 4-digit OTP", "warning");
+  }
+};
 
 
 
