@@ -33,6 +33,7 @@ const HeroSection = () => {
   const [newImageFile, setNewImageFile] = useState<File | null>(null);
   const [profileExists, setProfileExists] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
 
   const [editingField, setEditingField] = useState(null);
@@ -41,83 +42,68 @@ const HeroSection = () => {
   const startEditing = (field: any, value: any) => {
     setEditingField(field);
     setTempValue(value);
+    // Clear error when starting to edit
+    setFormErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
-  const isMeaningfulText = (value: string) => {
-  const cleaned = value.trim().replace(/[^a-zA-Z0-9]/g, '');
-  return cleaned.length > 2; // Allow only if there are at least 3 alphanumeric characters
-};
-
-
-  // const handleSave = async () => {
-  //   if (!editingField) return;
-
-  //   try {
-  //     const creatorString = localStorage.getItem("creator");
-  //     const creator = creatorString ? JSON.parse(creatorString) : null;
-
-  //     if (!creator?.id) {
-  //       console.error("Creator ID not available");
-  //       return;
-  //     }
-
-  //     await creatorService.updateEventProfileField(
-  //       creator.id,
-  //       editingField,
-  //       tempValue
-  //     );
-
-  //     if (editingField === "profileName") setProfileName(tempValue);
-  //     if (editingField === "profileBio") setProfileBio(tempValue);
-  //     if (editingField === "eventCount") setEventCount(tempValue);
-  //     if (editingField === "profileImage") setProfileImage(tempValue);
-
-  //     setEditingField(null);
-  //   } catch (error) {
-  //     console.error("Failed to update:", error);
-  //   }
-  // };
-
   const handleSave = async () => {
-  if (!editingField) return;
+    if (!editingField) return;
 
-  if (!isMeaningfulText(tempValue)) {
-    alert("Please enter a valid value (not empty or meaningless characters)");
-    return;
-  }
+    const trimmed = tempValue.trim();
+    const isTextInvalid = trimmed.replace(/[^a-zA-Z0-9]/g, '').length < 3;
 
-  try {
-    const creatorString = localStorage.getItem("creator");
-    const creator = creatorString ? JSON.parse(creatorString) : null;
-
-    if (!creator?.id) {
-      console.error("Creator ID not available");
+    if (isTextInvalid) {
+      setFormErrors((prev) => ({
+        ...prev,
+        [editingField]: "Please enter at least 3 meaningful characters",
+      }));
       return;
     }
 
-    await creatorService.updateEventProfileField(
-      creator.id,
-      editingField,
-      tempValue
-    );
+    setFormErrors((prev) => ({ ...prev, [editingField]: "" }));
 
-    if (editingField === "profileName") setProfileName(tempValue);
-    if (editingField === "profileBio") setProfileBio(tempValue);
-    if (editingField === "eventCount") setEventCount(tempValue);
+    try {
+      const creatorString = localStorage.getItem("creator");
+      const creator = creatorString ? JSON.parse(creatorString) : null;
 
-    setEditingField(null);
-  } catch (error) {
-    console.error("Failed to update:", error);
-  }
-};
+      if (!creator?.id) {
+        console.error("Creator ID not available");
+        return;
+      }
 
+      await creatorService.updateEventProfileField(
+        creator.id,
+        editingField,
+        trimmed
+      );
+
+      if (editingField === "profileName") setProfileName(trimmed);
+      if (editingField === "profileBio") setProfileBio(trimmed);
+      if (editingField === "eventCount") setEventCount(trimmed);
+
+      setEditingField(null);
+    } catch (error) {
+      console.error("Failed to update:", error);
+    }
+  };
 
   useEffect(() => {
     console.log("selectedMedia:", profileExists);
   }, [profileExists]);
 
   const addEventType = async () => {
-    if (!newEventType.trim()) return;
+    const trimmed = newEventType.trim();
+
+    // Validate: non-empty, at least 3 alphanumeric characters, no special-only strings
+    if (!trimmed || /^[^a-zA-Z0-9]*$/.test(trimmed) || trimmed.length < 3) {
+      setFormErrors((prev) => ({
+        ...prev,
+        newEventType: "Please enter a valid event type (at least 3 alphanumeric characters)",
+      }));
+      return;
+    }
+
+    setFormErrors((prev) => ({ ...prev, newEventType: "" })); // Clear error
 
     const creatorString = localStorage.getItem("creator");
     const creator = creatorString ? JSON.parse(creatorString) : null;
@@ -128,7 +114,7 @@ const HeroSection = () => {
     }
 
     try {
-      const updatedTypes = [...eventTypes, newEventType];
+      const updatedTypes = [...eventTypes, trimmed];
 
       await creatorService.updateEventProfileType(
         creator.id,
@@ -142,7 +128,6 @@ const HeroSection = () => {
       console.error("Failed to add event type:", error);
     }
   };
-
 
   const removeEventType = async (index: number) => {
     const creatorString = localStorage.getItem("creator");
@@ -163,9 +148,6 @@ const HeroSection = () => {
       console.error("Failed to remove event type:", error);
     }
   };
-
-
-
 
   const fetchProfile = async () => {
     try {
@@ -199,8 +181,6 @@ const HeroSection = () => {
       setProfileExists(false);
     }
   };
-
-
 
   useEffect(() => {
     fetchProfile();
@@ -237,76 +217,68 @@ const HeroSection = () => {
     fetchEvents();
   }, []);
 
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Clear previous image errors
+      setFormErrors((prev) => ({ ...prev, profileImage: "" }));
+      
+      // Check for valid image file type
+      const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        setFormErrors((prev) => ({
+          ...prev,
+          profileImage: "Only image files (JPG, PNG, WEBP) are allowed"
+        }));
+        return;
+      }
 
+      // Check file size (e.g., max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setFormErrors((prev) => ({
+          ...prev,
+          profileImage: "File size must be less than 5MB"
+        }));
+        return;
+      }
 
+      setNewImageFile(file);
+      setIsEditingImage(true);
+    }
+  };
 
-  // const handleSaveImage = async () => {
-  //   if (!newImageFile) return;
+  const handleSaveImage = async () => {
+    if (!newImageFile) return;
 
-  //   const creatorString = localStorage.getItem("creator");
-  //   const creator = creatorString ? JSON.parse(creatorString) : null;
+    const creatorString = localStorage.getItem("creator");
+    const creator = creatorString ? JSON.parse(creatorString) : null;
 
-  //   if (!creator?.id) {
-  //     console.error("Creator ID not available");
-  //     return;
-  //   }
+    if (!creator?.id) {
+      console.error("Creator ID not available");
+      return;
+    }
 
-  //   const formData = new FormData();
-  //   formData.append("profileImage", newImageFile);
-  //   formData.append("creatorId", creator.id);
+    const formData = new FormData();
+    formData.append("profileImage", newImageFile);
+    formData.append("creatorId", creator.id);
 
-  //   try {
-  //     setIsSaving(true);
-
-  //     const res = await updateProfileImage(formData);
-
-  //     setProfileImage(res.data.profileImage);
-  //     setNewImageFile(null);
-  //     setIsEditingImage(false);
-  //   } catch (error) {
-  //     console.error("Error uploading image:", error);
-  //   } finally {
-  //     setIsSaving(false);
-  //   }
-  // };
-
-const handleSaveImage = async () => {
-  if (!newImageFile) return;
-
-  // ✅ Check for valid image file type
-  const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-  if (!validTypes.includes(newImageFile.type)) {
-    alert('Only image files (JPG, PNG, WEBP) are allowed');
-    return;
-  }
-
-  const creatorString = localStorage.getItem("creator");
-  const creator = creatorString ? JSON.parse(creatorString) : null;
-
-  if (!creator?.id) {
-    console.error("Creator ID not available");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("profileImage", newImageFile);
-  formData.append("creatorId", creator.id);
-
-  try {
-    setIsSaving(true);
-    const res = await updateProfileImage(formData);
-    setProfileImage(res.data.profileImage);
-    setNewImageFile(null);
-    setIsEditingImage(false);
-  } catch (error) {
-    console.error("Error uploading image:", error);
-  } finally {
-    setIsSaving(false);
-  }
-};
-
-
-
+    try {
+      setIsSaving(true);
+      const res = await updateProfileImage(formData);
+      setProfileImage(res.data.profileImage);
+      setNewImageFile(null);
+      setIsEditingImage(false);
+      setFormErrors((prev) => ({ ...prev, profileImage: "" }));
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setFormErrors((prev) => ({
+        ...prev,
+        profileImage: "Failed to upload image. Please try again."
+      }));
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -316,7 +288,6 @@ const handleSaveImage = async () => {
 
           <div className="bg-black h-40 w-full"></div>
           <div className="px-8 pb-10 relative">
-
 
             <div className="flex flex-col items-center -mt-20">
               <img
@@ -330,18 +301,17 @@ const handleSaveImage = async () => {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setNewImageFile(file);
-                      setIsEditingImage(true);
-                    }
-                  }}
+                  onChange={handleImageFileChange}
                   className="hidden"
                 />
               </label>
 
-              {isEditingImage && (
+              {/* Image Error Message */}
+              {formErrors.profileImage && (
+                <p className="text-red-500 text-xs mt-1 text-center">{formErrors.profileImage}</p>
+              )}
+
+              {isEditingImage && !formErrors.profileImage && (
                 isSaving ? (
                   <div className="mt-2 flex items-center justify-center">
                     <div className="w-6 h-6 border-[3px] border-blue-500 border-dashed rounded-full animate-spin"></div>
@@ -359,27 +329,29 @@ const handleSaveImage = async () => {
 
             </div>
 
-
-
-
             <div className="absolute top-4 right-8">
               <div className="bg-white shadow-inner border rounded-xl px-5 py-3">
                 {editingField === "eventCount" ? (
-                  <div className="flex items-center space-x-3">
-                    <span className="text-sm text-gray-700">Events Hosted:</span>
-                    <input
-                      type="number"
-                      value={tempValue}
-                      onChange={(e) => setTempValue(e.target.value)}
-                      className="border rounded px-2 py-1 w-20 text-center"
-                      autoFocus
-                    />
-                    <button
-                      onClick={handleSave}
-                      className="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                    >
-                      Save
-                    </button>
+                  <div className="flex flex-col">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-sm text-gray-700">Events Hosted:</span>
+                      <input
+                        type="number"
+                        value={tempValue}
+                        onChange={(e) => setTempValue(e.target.value)}
+                        className={`border rounded px-2 py-1 w-20 text-center ${formErrors.eventCount ? 'border-red-500' : ''}`}
+                        autoFocus
+                      />
+                      <button
+                        onClick={handleSave}
+                        className="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                      >
+                        Save
+                      </button>
+                    </div>
+                    {formErrors.eventCount && (
+                      <p className="text-red-500 text-xs mt-1">{formErrors.eventCount}</p>
+                    )}
                   </div>
                 ) : (
                   <div className="flex items-center justify-between gap-3">
@@ -398,20 +370,25 @@ const handleSaveImage = async () => {
 
             <div className="mt-8 text-center">
               {editingField === "profileName" ? (
-                <div className="flex justify-center gap-3">
-                  <input
-                    type="text"
-                    value={tempValue}
-                    onChange={(e) => setTempValue(e.target.value)}
-                    className="border px-4 py-2 rounded w-full max-w-lg"
-                    autoFocus
-                  />
-                  <button
-                    onClick={handleSave}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  >
-                    Save
-                  </button>
+                <div className="flex flex-col items-center gap-3">
+                  <div className="flex gap-3">
+                    <input
+                      type="text"
+                      value={tempValue}
+                      onChange={(e) => setTempValue(e.target.value)}
+                      className={`border px-4 py-2 rounded w-full max-w-lg ${formErrors.profileName ? 'border-red-500' : ''}`}
+                      autoFocus
+                    />
+                    <button
+                      onClick={handleSave}
+                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                      Save
+                    </button>
+                  </div>
+                  {formErrors.profileName && (
+                    <p className="text-red-500 text-xs">{formErrors.profileName}</p>
+                  )}
                 </div>
               ) : (
                 <div className="flex justify-center items-center gap-4">
@@ -428,20 +405,25 @@ const handleSaveImage = async () => {
               {/* Bio */}
               <div className="mt-4">
                 {editingField === "profileBio" ? (
-                  <div className="flex gap-3 justify-center">
-                    <textarea
-                      value={tempValue}
-                      onChange={(e) => setTempValue(e.target.value)}
-                      className="border px-4 py-3 rounded w-full max-w-2xl"
-                      rows={3}
-                      autoFocus
-                    />
-                    <button
-                      onClick={handleSave}
-                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                      Save
-                    </button>
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="flex gap-3 justify-center">
+                      <textarea
+                        value={tempValue}
+                        onChange={(e) => setTempValue(e.target.value)}
+                        className={`border px-4 py-3 rounded w-full max-w-2xl ${formErrors.profileBio ? 'border-red-500' : ''}`}
+                        rows={3}
+                        autoFocus
+                      />
+                      <button
+                        onClick={handleSave}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                      >
+                        Save
+                      </button>
+                    </div>
+                    {formErrors.profileBio && (
+                      <p className="text-red-500 text-xs">{formErrors.profileBio}</p>
+                    )}
                   </div>
                 ) : (
                   <div className="flex justify-center">
@@ -458,35 +440,43 @@ const handleSaveImage = async () => {
                 )}
               </div>
 
-
-
             </div>
 
             {/* Event Types */}
             <div className="mt-8 max-w-2xl mx-auto">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-800">Event Types</h3>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Add new..."
-                    value={newEventType}
-                    onChange={(e) => setNewEventType(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addEventType()}
-                    className="border rounded px-3 py-1 text-sm"
-                  />
-                  <button
-                    onClick={addEventType}
-                    className="bg-blue-500 text-white px-3 py-1 text-sm rounded hover:bg-blue-600"
-                  >
-                    Add
-                  </button>
-                  <button
-                    onClick={() => setEditMode(!editMode)}
-                    className={`px-3 py-1 text-sm rounded border transition ${editMode ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-700'}`}
-                  >
-                    {editMode ? 'Done' : 'Edit'}
-                  </button>
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Add new..."
+                      value={newEventType}
+                      onChange={(e) => {
+                        setNewEventType(e.target.value);
+                        if (formErrors.newEventType) {
+                          setFormErrors((prev) => ({ ...prev, newEventType: "" }));
+                        }
+                      }}
+                      onKeyDown={(e) => e.key === "Enter" && addEventType()}
+                      className={`border rounded px-3 py-1 text-sm ${formErrors.newEventType ? 'border-red-500' : ''}`}
+                    />
+                    <button
+                      onClick={addEventType}
+                      className="bg-blue-500 text-white px-3 py-1 text-sm rounded hover:bg-blue-600"
+                    >
+                      Add
+                    </button>
+                    <button
+                      onClick={() => setEditMode(!editMode)}
+                      className={`px-3 py-1 text-sm rounded border transition ${editMode ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-700'}`}
+                    >
+                      {editMode ? 'Done' : 'Edit'}
+                    </button>
+                  </div>
+                  {formErrors.newEventType && (
+                    <p className="text-red-500 text-xs">{formErrors.newEventType}</p>
+                  )}
                 </div>
               </div>
 
@@ -514,11 +504,7 @@ const handleSaveImage = async () => {
                 )}
               </div>
 
-
-
             </div>
-
-
 
           </div>
         </div>
@@ -578,17 +564,11 @@ const handleSaveImage = async () => {
                     )}
                   </div>
 
-
-
-
                 </div>
               ))
             )}
           </div>
         </div>
-
-
-
 
       </div>
     </div>
