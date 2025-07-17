@@ -34,7 +34,7 @@ export const API_CONFIG = {
     VERIFY_OTP_FORGOT_PASSWORD: 'users/verify-otp-forgot-password',
     LOGIN: 'users/login',
     CANCEL_TICKET: (userId: string, ticketId: string) => `/users/${userId}/tickets/${ticketId}/cancel`,
-    RESET_PASSWORD: '/users/reset-password',
+    RESET_PASSWORD: 'users/reset-password',
     REGISTER: 'users/register',
     UPLOAD: 'users/upload',
     RESEND_OTP: '/users/resend-otp',
