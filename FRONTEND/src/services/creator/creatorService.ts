@@ -2,6 +2,7 @@ import axios from 'axios';
 import { API_CONFIG } from '../../config/config';
 
 const BASE_URL = API_CONFIG.CREATOR.BASE_URL;
+const BASE_URL1 = API_CONFIG.BASE_URL;
 
 export const creatorService = {
 
@@ -44,7 +45,7 @@ getAllSubscriptions: async () => {
 
   getCreatorStatus: async (creatorId: string) => {
   try {
-    const url = `${BASE_URL}${API_CONFIG.ADMIN_ENDPOINTS.CREATOR_STATUS}/${creatorId}`;
+    const url = `${BASE_URL1}${API_CONFIG.ADMIN_ENDPOINTS.CREATOR_STATUS}/${creatorId}`;
     const res = await fetch(url);
 
     const data = await res.json();
