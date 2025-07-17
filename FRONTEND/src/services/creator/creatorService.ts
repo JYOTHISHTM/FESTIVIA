@@ -44,7 +44,7 @@ getAllSubscriptions: async () => {
 
   getCreatorStatus: async (creatorId: string) => {
   try {
-    const url = `${BASE_URL}${API_CONFIG.CREATOR.ENDPOINTS.CREATOR_STATUS}/${creatorId}`;
+    const url = `${BASE_URL}${API_CONFIG.ADMIN_ENDPOINTS.CREATOR_STATUS}/${creatorId}`;
     const res = await fetch(url);
 
     const data = await res.json();
