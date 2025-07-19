@@ -39,9 +39,9 @@ export const API_CONFIG = {
     UPLOAD: 'users/upload',
     RESEND_OTP: '/users/resend-otp',
     VERIFY_OTP: '/users/verify-otp',
-    WALLET_ENDPOINT:'users/wallet',
-    ADD_MONEY:'users/wallet/add',
-    CHECKOUT_SESSION:'users/wallet/checkout-session',
+    WALLET_ENDPOINT: 'users/wallet',
+    ADD_MONEY: 'users/wallet/add',
+    CHECKOUT_SESSION: 'users/wallet/checkout-session',
 
 
 
@@ -70,8 +70,8 @@ export const API_CONFIG = {
     ALL_SUBSCRIPTIONS: '/admin/all-subscriptions',
     CREATE_SUBSCRIPTION: `/admin/create-subscription`,
     DELETE_SUBSCRIPTION: (planId: string) => `/admin/delete-subscription/${planId}`,
-    CREATOR_REAPPLY: (creatorId: string) => `creator-reapply/${creatorId}`,
- CREATOR_STATUS: "/admin/creator-status",
+    CREATOR_REAPPLY: (creatorId: string) => `admin/creator-reapply/${creatorId}`,
+    CREATOR_STATUS: "/admin/creator-status",
 
 
 
@@ -103,7 +103,7 @@ export const API_CONFIG = {
       GET_EVENT_PROFILE_INFO: "/event-profile-info",
       ALL_LISTED_EVENTS: "/all-listed-events",
       CHAT_WITH_USERS: "/chat/creator",
-     
+
       POST_DETAILS: "/post-details",
       SUBSCRIPTION: "/subscription",
       ALL_SUBSCRIPTIONS: "/all-subscriptions",

@@ -68,7 +68,7 @@ const PendingPage = () => {
             <button
               onClick={async () => {
                 try {
-                  const res = await fetch(`${BASE_URL}/${API_CONFIG.ADMIN_ENDPOINTS.CREATOR_REAPPLY}`, {
+                  const res = await fetch(`${BASE_URL}/${API_CONFIG.ADMIN_ENDPOINTS.CREATOR_REAPPLY(creatorId as string)}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                   });
