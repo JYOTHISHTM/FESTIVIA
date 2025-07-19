@@ -37,7 +37,7 @@ function LandingPage() {
                 <div className="absolute -inset-1 bg-green-100 rounded-full blur opacity-0 group-hover:opacity-75 transition-opacity"></div>
               </div>
               <span className="ml-3 text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-                EventPro
+                FESTIVIA
               </span>
             </div>
 
