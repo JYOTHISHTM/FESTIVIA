@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { creatorService } from "../../services/creator/creatorService";
 import { BASE_URL } from "../../config/config";
 import { API_CONFIG } from "../../config/config";
+import Swal from 'sweetalert2';
 
 const PendingPage = () => {
   const { creatorId } = useParams<{ creatorId: string }>();
@@ -66,31 +67,44 @@ const PendingPage = () => {
               <p className="mt-2 text-gray-700">Reason: {rejectionReason}</p>
             )}
             <button
-              onClick={async () => {
-                try {
-                  const res = await fetch(`${BASE_URL}/${API_CONFIG.ADMIN_ENDPOINTS.CREATOR_REAPPLY(creatorId as string)}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                  });
+  onClick={async () => {
+    try {
+      const res = await fetch(`${BASE_URL}${API_CONFIG.ADMIN_ENDPOINTS.CREATOR_REAPPLY(creatorId as string)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-                  const data = await res.json();
+      const data = await res.json();
 
-                  if (res.ok) {
-                    alert('Reapplied successfully!');
-                    setCreatorStatus('pending');
-                    setRejectionReason(null);
-                  } else {
-                    alert(data.message || 'Failed to reapply');
-                  }
-                } catch (err) {
-                  console.error(err);
-                  alert('Something went wrong');
-                }
-              }}
-              className="bg-black text-white rounded-xl w-25 h-10 mt-5"
-            >
-              REAPPLY
-            </button>
+      if (res.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Reapplied successfully!',
+          confirmButtonColor: '#3085d6',
+        });
+        setCreatorStatus('pending');
+        setRejectionReason(null);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: data.message || 'Failed to reapply',
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Something went wrong',
+        text: 'Please try again later.',
+      });
+    }
+  }}
+  className="bg-black text-white rounded-xl w-25 h-10 mt-5"
+>
+  REAPPLY
+</button>
+
 
           </>
         ) : (

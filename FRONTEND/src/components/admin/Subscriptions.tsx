@@ -31,15 +31,37 @@ export default function AdminSubscription() {
     fetchPlans();
   }, []);
 
-  const validate = () => {
-    const errs: any = {};
-    if (!form.name.trim()) errs.name = "Name is required";
-    if (!form.price || isNaN(+form.price) || +form.price < 100 || +form.price > 3000)
-      errs.price = "Price must be between 100 and 3000";
-    if (!form.days || isNaN(+form.days) || +form.days < 10 || +form.days > 100)
-      errs.days = "Days must be between 10 and 100";
-    return errs;
-  };
+ const validate = () => {
+  const errs: any = {};
+
+  if (
+    !form.name.trim() ||                         
+    !/[a-zA-Z0-9]/.test(form.name)              
+  ) {
+    errs.name = "Name must contain valid characters";
+  }
+
+  if (
+    !form.price ||
+    isNaN(+form.price) ||
+    +form.price < 100 ||
+    +form.price > 3000
+  ) {
+    errs.price = "Price must be between 100 and 3000";
+  }
+
+  if (
+    !form.days ||
+    isNaN(+form.days) ||
+    +form.days < 10 ||
+    +form.days > 100
+  ) {
+    errs.days = "Days must be between 10 and 100";
+  }
+
+  return errs;
+};
+
 
   useEffect(() => {
     const errs = validate();
