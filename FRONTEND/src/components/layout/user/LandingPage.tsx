@@ -246,7 +246,7 @@ function LandingPage() {
             <div>
               <div className="flex items-center mb-6">
                 <Calendar className="h-8 w-8 text-green-400" />
-                <span className="ml-2 text-2xl font-bold">EventPro</span>
+                <span className="ml-2 text-2xl font-bold">FESTIVIA</span>
               </div>
               <p className="text-gray-400">Creating memorable events since 2020</p>
             </div>
@@ -262,7 +262,7 @@ function LandingPage() {
               <h4 className="text-lg font-semibold mb-6">Contact</h4>
               <div className="space-y-3">
                 <p className="flex items-center text-gray-400 hover:text-white transition-colors">
-                  <Mail className="h-5 w-5 mr-2" /> info@eventpro.com
+                  <Mail className="h-5 w-5 mr-2" /> info@festivia.com
                 </p>
                 <p className="flex items-center text-gray-400 hover:text-white transition-colors">
                   <Phone className="h-5 w-5 mr-2" /> +1 (555) 123-4567
@@ -287,7 +287,7 @@ function LandingPage() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-gray-800 text-center">
-            <p className="text-gray-400">&copy; 2024 EventPro. All rights reserved.</p>
+            <p className="text-gray-400">&copy; 2024 FESTIVIA. All rights reserved.</p>
           </div>
         </div>
       </footer>
