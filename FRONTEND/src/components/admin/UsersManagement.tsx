@@ -3,6 +3,7 @@ import { Users, Search, AlertCircle } from "lucide-react";
 import Sidebar from "../../components/layout/admin/SideBar";
 import Swal from "sweetalert2";
 import { fetchUsers, toggleBlockUser } from "../../services/admin/adminService";
+import { debounce } from "lodash";
 
 interface User {
   _id: string;
@@ -17,18 +18,34 @@ const UsersManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 1;
 
-  useEffect(() => {
-    getUsers();
-  }, []);
+  // useEffect(() => {
+  //   getUsers();
+  // }, []);
 
-  const getUsers = async () => {
+  // const getUsers = async () => {
+  //   try {
+  //     const usersData = await fetchUsers();
+  //     setUsers(usersData);
+  //   } catch (err) {
+  //     console.error("Error fetching users:", err);
+  //   }
+  // };
+
+  
+  useEffect(() => {
+    getUsers(searchTerm);
+  }, [searchTerm]);
+  
+  const getUsers = debounce(async (term: string) => {
     try {
-      const usersData = await fetchUsers();
-      setUsers(usersData);
+      const res = await fetchUsers(term); // send search term to backend
+      setUsers(res);
     } catch (err) {
-      console.error("Error fetching users:", err);
+      console.error("Failed to fetch creators.");
     }
-  };
+
+
+  }, 500); // 500ms debounce
 
   const handleToggleBlock = async (userId: string, isBlocked: boolean) => {
     const action = isBlocked ? "Unblock" : "Block";

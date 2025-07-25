@@ -84,15 +84,16 @@ export const getEvents = async () => {
 };
 
 
-export const getCreators = async () => {
+export const getCreators = async (searchTerm: string) => {
   try {
-    const res = await api.get(ADMIN_ENDPOINTS.CREATORS);
+    const res = await api.get(`${ADMIN_ENDPOINTS.CREATORS}?search=${encodeURIComponent(searchTerm)}`);
     return res.data;
   } catch (err) {
     console.error("Error fetching creators:", err);
     throw err;
   }
 };
+
 
 export const toggleCreatorBlockStatus = async (creatorId: string) => {
   try {
@@ -113,9 +114,9 @@ export const adminLogin = async (username: string, password: string) => {
   }
 };
 
-export const fetchUsers = async () => {
+export const fetchUsers = async (searchTerm: string) => {
   try {
-    const response = await api.get(ADMIN_ENDPOINTS.USERS);
+    const response = await api.get(`${ADMIN_ENDPOINTS.USERS}?search=${encodeURIComponent(searchTerm)}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);

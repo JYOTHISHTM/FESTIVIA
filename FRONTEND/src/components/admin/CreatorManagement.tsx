@@ -3,6 +3,7 @@ import { Users, Search, AlertCircle } from "lucide-react";
 import Sidebar from "../../components/layout/admin/SideBar";
 import Swal from "sweetalert2";
 import { getCreators, toggleCreatorBlockStatus } from "../../services/admin/adminService";
+import { debounce } from "lodash";
 
 interface Creator {
   _id: string;
@@ -17,18 +18,32 @@ const CreatorsManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
 
-  useEffect(() => {
-    fetchCreators();
-  }, []);
+  // useEffect(() => {
+  //   fetchCreators();
+  // }, []);
 
-  const fetchCreators = async () => {
-    try {
-      const data = await getCreators();
-      setCreators(data);
-    } catch (err) {
-      console.error("Failed to fetch creators.");
-    }
-  };
+  // const fetchCreators = async () => {
+  //   try {
+  //     const data = await getCreators();
+  //     setCreators(data);
+  //   } catch (err) {
+  //     console.error("Failed to fetch creators.");
+  //   }
+  // };
+
+  // Inside component
+useEffect(() => {
+  fetchCreators(searchTerm);
+}, [searchTerm]);
+
+const fetchCreators = debounce(async (term: string) => {
+  try {
+    const res = await getCreators(term); // send search term to backend
+    setCreators(res);
+  } catch (err) {
+    console.error("Failed to fetch creators.");
+  }
+}, 500); // 500ms debounce
 
   const toggleBlockCreator = async (creatorId: string, isBlocked: boolean) => {
     const action = isBlocked ? "Unblock" : "Block";
